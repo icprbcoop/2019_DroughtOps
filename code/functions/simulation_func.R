@@ -30,7 +30,7 @@ simulation_func <- function(date_sim0,
                             mos_1day,
                             dr_wma_override,
                             demands.daily.df,
-                            potomac.daily.df,
+#                            potomac.daily.df,
                             sen,
                             jrr,
                             pat,
@@ -45,6 +45,7 @@ simulation_func <- function(date_sim0,
   #
   # Find out demand restriction status
   # First compute upstr storage as fraction of capacity
+  print(paste("date_sim0 ", date_sim0))
   month_today <- month(date_sim0)
   jrr.ds <- ts$jrr
   sen.ds <- ts$sen

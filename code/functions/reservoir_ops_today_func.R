@@ -53,6 +53,7 @@ reservoir_ops_today_func <- function(date_sim, res, res.ts.df,
   #       spill(i) = excess water, over capacity
   # (Note the loop will write 1 extra row at end with date_time = <NA>)
   # Access some values storaged in the reservoir object
+  print(paste("date_sim in res_ops ", date_sim))
     cap <- res@capacity # see reservoir_make.R for basic res data
     flowby <- res@flowby
     withdr_max <- res@withdr_max
@@ -64,8 +65,11 @@ reservoir_ops_today_func <- function(date_sim, res, res.ts.df,
   # Get the last row of the res.ts.df, "yesterday", 
   #    and read its values:
     yesterday.df <- tail(res.ts.df,1)
+    print(yesterday.df)
     yesterday_date <- yesterday.df[1,1] # yesterday's date
+    print(yesterday_date)
     stor <- yesterday.df[1,2] # yesterday's BOP storage
+    print(stor)
     inflow <- yesterday.df[1,3] # yesterday's inflow
     w <- yesterday.df[1,4] # yesterday's  withdrawal from intake in reservoir
     outflow <- yesterday.df[1,5] # yesterday's release over dam

@@ -16,21 +16,29 @@ shinyServer(function(input, output, session) {
               occ = occ.ts.df0,
               flows = potomac.ts.df0,
               states = state.ts.df0)
-  ts <- sim_main_func(date_today0,
-                      dr_va0, # VA upstream demand reduction
-                      dr_md_cent0, # MD-Central upstream demand reduction
-                      dr_md_west0, # MD-Western upstream demand reduction
-                      mos_1day0, # COOP 1-day margin of safety
-                      dr_wma_override0, # WMA demand reduction override
-                      ts0) 
   #
-  # Now make ts reactive, initializing to results from above
-  ts <- reactiveValues(flows = ts$flows, 
-                       sen = ts$sen, 
-                       jrr = ts$jrr,
-                       pat = ts$pat,
-                       occ = ts$occ,
-                       states = ts$states)
+  # 2019 - drop this first simulation and define ts from the ts0's
+  # ts <- sim_main_func(date_today0,
+  #                     dr_va0, # VA upstream demand reduction
+  #                     dr_md_cent0, # MD-Central upstream demand reduction
+  #                     dr_md_west0, # MD-Western upstream demand reduction
+  #                     mos_1day0, # COOP 1-day margin of safety
+  #                     dr_wma_override0, # WMA demand reduction override
+  #                     ts0) 
+  #
+  # # Now make ts reactive, initializing to results from above
+  # ts <- reactiveValues(flows = ts$flows, 
+  #                      sen = ts$sen, 
+  #                      jrr = ts$jrr,
+  #                      pat = ts$pat,
+  #                      occ = ts$occ,
+  #                      states = ts$states)
+  ts <- reactiveValues(flows = ts0$flows,
+                       sen = ts0$sen,
+                       jrr = ts0$jrr,
+                       pat = ts0$pat,
+                       occ = ts0$occ,
+                       states = ts0$states)
   #
   # Allow the user to re-run the simulation 
   #   - say, if end date (aka DREXtoday) changes

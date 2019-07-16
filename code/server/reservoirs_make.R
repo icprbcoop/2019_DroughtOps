@@ -84,22 +84,41 @@ occ <- new("Reservoir", name = "Occoquan Reservoir",
 #------------------------------------------------------------------
 # C. Initialize dataframes that hold the reservoir time series (ts)
 #------------------------------------------------------------------
-sen.ts.df0 <- reservoir_ops_init_func(sen, sen_withdr_req0, sen_ws_rel_req0)
-jrr.ts.df00 <- reservoir_ops_init_func(jrr, jrr_withdr_req0, jrr_ws_rel_req0)
-jrr.ts.df0 <- jrr.ts.df00 %>%
-  mutate(storage_ws = 13000,
-         storage_wq = 8000, # in DREX we start in January
-         ws_rel_req = 0,
-         wq_rel_req = 120,
-         outflow = 120, # adding this because of mysterious problem
-         outflow_ws = 0,
-         outflow_wq = 120) %>%
-  select(date_time, storage, storage_ws, storage_wq,
-         inflow, withdr, outflow, outflow_ws, outflow_wq,
-         withdr_req, rel_req, ws_rel_req, wq_rel_req, available)
-pat.ts.df0 <- reservoir_ops_init_func(pat, pat_withdr_req0, pat_ws_rel_req0)
-occ.ts.df0 <- reservoir_ops_init_func(occ, occ_withdr_req0, occ_ws_rel_req0)
+# sen.ts.df0 <- reservoir_ops_init_func(sen, sen_withdr_req0, sen_ws_rel_req0)
+# jrr.ts.df0 <- reservoir_ops_init_func(jrr, jrr_withdr_req0, jrr_ws_rel_req0)
+# jrr.ts.df0 <- jrr.ts.df0 %>%
+#   mutate(storage_ws = 13000,
+#          storage_wq = 8000, # in DREX we start in January
+#          ws_rel_req = 0,
+#          wq_rel_req = 120,
+#          outflow = 120, # adding this because of mysterious problem
+#          outflow_ws = 0,
+#          outflow_wq = 120) %>%
+#   select(date_time, storage, storage_ws, storage_wq,
+#          inflow, withdr, outflow, outflow_ws, outflow_wq,
+#          withdr_req, rel_req, ws_rel_req, wq_rel_req, available)
+# pat.ts.df0 <- reservoir_ops_init_func(pat, pat_withdr_req0, pat_ws_rel_req0)
+# occ.ts.df0 <- reservoir_ops_init_func(occ, occ_withdr_req0, occ_ws_rel_req0)
+# #
+# sen.ts.df <- sen.ts.df0
+# jrr.ts.df <- jrr.ts.df0
+# pat.ts.df <- pat.ts.df0
+# occ.ts.df <- occ.ts.df0
 #
+# 2019 - the df00's are temporarily read in import_data.R
+# want to change initialization of the res dfs to allow passive graphing up thru yesterday
+#   - in 2018drex were initialized with just 1 row of values (for date_start)
+#   - now want them initialized with rows from date_start to (date_today0 - 1)
+#     in order to have time series for graphing purposes
+#     (for the time being there will be some dummy values but ok since they won't be used)
+sen.ts.df0 <- sen.ts.df00 %>%
+  filter(date_time < date_today0)
+jrr.ts.df0 <- jrr.ts.df00 %>%
+  filter(date_time < date_today0)
+pat.ts.df0 <- pat.ts.df00 %>%
+  filter(date_time < date_today0)
+occ.ts.df0 <- occ.ts.df00 %>%
+  filter(date_time < date_today0)
 sen.ts.df <- sen.ts.df0
 jrr.ts.df <- jrr.ts.df0
 pat.ts.df <- pat.ts.df0

@@ -35,7 +35,7 @@ sim_add_days_func <- function(added_days,
                           mos_1day,
                           dr_wma_override,
                           demands.daily.df,
-                          potomac.daily.df,
+#                          potomac.daily.df,
                           sen, jrr, pat, occ,
                           ts)
   }

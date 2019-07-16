@@ -5,7 +5,7 @@
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
 dashboardPage(skin = "blue",
-  dashboardHeader(title = "WMA 2018 DREX",
+  dashboardHeader(title = "CO-OP Operations",
                   .list = NULL, 
                   #this space is for outputting the date to the login bar
                   #it needs to be an html list item(li) with class dropdown
@@ -22,17 +22,17 @@ dashboardPage(skin = "blue",
     width = 250,
     dateRangeInput("plot_range",
                "Specify plot range",
-#               start = date_start,
-               start = "2038-07-01",
+               start = date_start,
+#               start = "2019-05-01",
 #               end = "1930-12-31",
                # start = date_start,
                end = date_end,
                format = "yyyy-mm-dd",
                width = NULL),
 dateInput("DREXtoday",
-          "Change last day of simulation",
+          "Select end date of simulation (> yesterday)",
           width = "200px",
-          value = date_today0, # date_today set in parameters.R
+          value = date_today0, # date_today0 = today() - set in parameters.R
 #          value = "1930-02-15",
 #          min = "1929-10-02",
 #          max = "1931-12-31",
@@ -41,7 +41,7 @@ dateInput("DREXtoday",
           format = "yyyy-mm-dd"),
 
 actionButton("run_main",
-             "Re-run simulation",
+             "Run simulation",
              icon = NULL,
              width = "220px"),
 br(),

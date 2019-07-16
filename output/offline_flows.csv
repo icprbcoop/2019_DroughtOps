@@ -1,4 +1,0 @@
-"","date_time","qad","qav","lfalls_nat","por_nat","below_por","demand","lfalls_adj","lfalls_obs","lfalls_obs_fc9","lfalls_obs_fc1","sen_outflow","sen_outflow_lagged","sen_watershed","jrr_outflow","jrr_outflow_lagged","withdr_pot_fw","withdr_pot_fw_lagged","withdr_pot_wssc","need_0day","need_1day","withdr_pot_wa"
-"1",1930-01-01,1930-01-01,9999.9,12027,9971.38,2379.15,300,12027,11727,1000,1000,0,9,30,120,129,100,100,100,0,0,100
-"2",1930-01-02,1930-01-02,5818,13230,8417.08,1901.19,356.5,13350,NA,NA,NA,10,NA,30,5818,120,76.6,NA,88.3,0,0,191.6
-"3",1930-01-03,1930-01-03,5818,11809,7353.16,1837.47,347.5,11929,NA,NA,NA,10,NA,30,5818,120,75,NA,85,0,0,187.5

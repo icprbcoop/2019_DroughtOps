@@ -11,21 +11,30 @@
 #   - demands_total_unrestricted
 #--------------------------------------------------------------------------------
 potomac.data.df <- flows.daily.mgd.df %>%
-  dplyr:: select(date_time, por_nat, below_por, lfalls_nat) %>%
-  dplyr:: filter(date_time <= date_end,
-                 date_time >= date_start)
+  dplyr:: select(date_time, por_nat, below_por, lfalls_nat)
 #
-# For the moment need to be careful - didn't add enough demand data
-demands.daily.df <- demands.daily.df %>%
-  dplyr:: filter(date_time <= date_end,
-                 date_time >= date_start)
+# # For the moment need to be careful - didn't add enough demand data
+# demands.daily.df <- demands.daily.df %>%
+#   dplyr:: filter(date_time <= date_end,
+#                  date_time >= date_start)
 #
 potomac.data.df <- left_join(potomac.data.df, 
                              demands.daily.df,
                              by = "date_time") %>%
-  select(date_time,por_nat, below_por, 
-#         lfalls_nat, d_total)
-         lfalls_nat)
+  select(date_time, por_nat, below_por, 
+         lfalls_nat, d_total)
+#
+# Want to change initialization of this key df to just passively graph up to yesterday
+#   - in 2018drex was initialized with just 1 row of values (for date_start)
+#   - now want it initialized with rows from date_start to (date_today0 - 1)
+#     in order to have time series for graphing purposes
+#     (for the time being there will be some dummy values - see code below,
+#     but ok since they won't be used)
+potomac.data.df00 <- potomac.data.df %>%
+  filter(date_time < date_today0)
+
+n_today <- length(potomac.data.df00$date_time)
+#
 #--------------------------------------------------------------------------------
 # Create and initialize dataframe of Potomac simulated flow time series
 #--------------------------------------------------------------------------------
@@ -42,7 +51,9 @@ potomac.data.df <- left_join(potomac.data.df,
 jrr_outflow_lagged_default <- 129
 sen_outflow_lagged_default <- 9
 sen_other <- sen_other_watershed_flows # from parameters.R
-potomac.ts.df0 <- potomac.data.df[1,] %>%
+#
+# potomac.ts.df0 <- potomac.data.df0[1,] %>%
+potomac.ts.df0 <- potomac.data.df00 %>%
   mutate(lfalls_adj = lfalls_nat,
          qad = date_start,  # a slot for debugging dates
          qav = 9999.9,  # a slot for debugging values
@@ -50,7 +61,7 @@ potomac.ts.df0 <- potomac.data.df[1,] %>%
          dQ_md = 0.0, # ''
          lfalls_obs_fc9 = 1000,
          lfalls_obs_fc1 = 1000,
-         demand = 300, # delete this later
+         demand = d_total, # 
          sen_outflow = 0.0, # represents reservoir outflow
          sen_outflow_lagged = sen_outflow_lagged_default, # one-day lag
          sen_watershed = sen_other, # represents other seneca cr watershed flows

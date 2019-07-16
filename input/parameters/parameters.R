@@ -9,9 +9,10 @@
 # date_start <- as.Date("1930-01-01")
 # date_end <- as.Date("1931-09-30")
 # date_today0 <- as.Date("1930-05-01")
-date_start <- as.Date("2038-01-01")
-date_end <- as.Date("2039-09-30")
-date_today0 <- as.Date("2039-06-01")
+date_start <- as.Date("2019-04-01")
+date_end <- as.Date("2019-09-30")
+date_today0 <- as.Date(today())
+# date_today0 <- as.Date("2019-07-01")
 #
 #--------------------------------------------------------------------------------
 # Universal conversion factors
