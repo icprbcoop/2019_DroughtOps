@@ -107,7 +107,7 @@ actionButton("write_ts",
     
     
       # navbarMenu(title = "where to?", menuName = title, icon = NULL), 
-      navbarPage("Test",
+      navbarPage(title=NULL,
 
     
       source("code/ui/situational_awareness.R", local = TRUE)$value,
