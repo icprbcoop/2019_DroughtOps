@@ -22,26 +22,26 @@ source("code/global/import_data.R", local = TRUE)
 #-----------------------------------------------------------------
 #
 source("code/classes/reservoir_class.R", local = TRUE)
-source("code/functions/reservoir_ops_init_func.R", local = TRUE)
-source("code/functions/reservoir_ops_today_func.R", local = TRUE)
-source("code/functions/jrr_reservoir_ops_today_func.R", local = TRUE)
-source("code/functions/jrr_reservoir_ops_today_func2.R", local = TRUE)
-source("code/functions/forecasts_demands_func.R", local = TRUE)
-source("code/functions/forecasts_flows_func.R", local = TRUE)
-source("code/functions/state_indices_update_func.R", local = TRUE)
-source("code/functions/estimate_need_func.R", local = TRUE)
-source("code/functions/restriction_flow_benefits_func.R", local = TRUE)
-source("code/functions/sim_main_func.R", local = TRUE)
-source("code/functions/simulation_func.R", local = TRUE)
-source("code/functions/sim_add_days_func.R", local = TRUE)
-source("code/functions/rule_curve_func.R", local = TRUE)
-source("code/functions/nbr_rule_curve_func.R", local = TRUE)
-source("code/functions/display_graph_res_func.R", local = TRUE)
+source("code/functions/reservoir_ops/reservoir_ops_init_func.R", local = TRUE)
+source("code/functions/reservoir_ops/reservoir_ops_today_func.R", local = TRUE)
+source("code/functions/reservoir_ops/jrr_reservoir_ops_today_func.R", local = TRUE)
+source("code/functions/reservoir_ops/jrr_reservoir_ops_today_func2.R", local = TRUE)
+source("code/functions/forecast/forecasts_demands_func.R", local = TRUE)
+source("code/functions/forecast/forecasts_flows_func.R", local = TRUE)
+source("code/functions/state/state_indices_update_func.R", local = TRUE)
+source("code/functions/simulation/estimate_need_func.R", local = TRUE)
+source("code/functions/simulation/restriction_flow_benefits_func.R", local = TRUE)
+source("code/functions/simulation/sim_main_func.R", local = TRUE)
+source("code/functions/simulation/simulation_func.R", local = TRUE)
+source("code/functions/simulation/sim_add_days_func.R", local = TRUE)
+source("code/functions/simulation/rule_curve_func.R", local = TRUE)
+source("code/functions/simulation/nbr_rule_curve_func.R", local = TRUE)
+source("code/functions/display/display_graph_res_func.R", local = TRUE)
 #--------------------------------------------------------------------------------
 #functions added by Luke
-source("code/functions/date_func.R", local = TRUE)
-source("code/functions/warning_color_func.R", local = TRUE)
-source("code/functions/warning_color_map_func.R", local = TRUE)#this is a lazy Friday fix that should be changed later
+source("code/functions/display/date_func.R", local = TRUE)
+source("code/functions/display/warning_color_func.R", local = TRUE)
+source("code/functions/display/warning_color_map_func.R", local = TRUE)#this is a lazy Friday fix that should be changed later
 #--------------------------------------------------------------------------------
 # Make the reservoir objects and reservoir time series df's
 #--------------------------------------------------------------------------------
