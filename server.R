@@ -11,9 +11,13 @@ shinyServer(function(input, output, session) {
   source("code/server/situational_awareness/4th_output2.R", local=TRUE)
   source("code/server/situational_awareness/5th_output3.R", local=TRUE)
   
+  #imported from zach's 2018 
+  source("code/server/dates_server.R", local = TRUE)
+  
   #one day tab
   
   #ten day tab
+  
   source("code/server/ten_day/ten_day_server.R", local=TRUE)
   
   #long term tab
