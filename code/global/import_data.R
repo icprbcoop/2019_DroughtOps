@@ -16,6 +16,7 @@
 #  - River flow at POR and LFalls are decreased by upstr CU
 #     and increased by WWTP discharges, ie dflow = wwtp - cu
 #     (see parameters.R for values)
+# Daily flow data can be downloaded each day from https://zsmith.shinyapps.io/coop_data_download/
 flows.daily.mgd.df0 <- data.table::fread(paste(ts_path, "flows_daily_mgd.csv", sep = ""),
                                       data.table = FALSE) %>%
   dplyr::mutate(date_time = as.Date(date),
