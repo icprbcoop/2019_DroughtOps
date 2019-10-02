@@ -43,6 +43,7 @@ source("code/functions/display/date_func.R", local = TRUE)
 source("code/functions/display/warning_color_func.R", local = TRUE)
 source("code/functions/display/warning_color_map_func.R", local = TRUE)#this is a lazy Friday fix that should be changed later
 source("code/functions/display/md_drought_map_func.R", local = TRUE)
+source("code/functions/display/va_drought_map_func.R", local = TRUE)
 #--------------------------------------------------------------------------------
 # Make the reservoir objects and reservoir time series df's
 #--------------------------------------------------------------------------------
@@ -125,4 +126,6 @@ western_region_t <- spTransform(western_dslv, CRS("+init=epsg:4326"))
 #calls function to get the latest version of the maryland drought map
 md_drought_map = md_drought_map_func(date_today0)
 
+#calls function to get the latest version of the virginia drought map
+va_drought_map = va_drought_map_func()
 
