@@ -79,6 +79,7 @@ sen_withdr_req0 <- 5.0
 sen_withdr_max <- 2.0
 sen_withdr_min <- 1.0
 sen_ws_rel_req0 <- 3.0
+bennett_to_sen_inflow <- 20.8/62.8 # Hagen & Steiner, ICPRB Report No. 99-3
 #
 sen.rc.df <- data.frame(month_sim) %>%
   dplyr::mutate(stor1 = 500,
@@ -102,6 +103,7 @@ jrr_ws_rel_req0 <- 300.0
 #
 jrr_ws_frac <- 0.4456
 jrr_wq_frac <- 0.5544
+kitzmiller_to_jrr_inflow <- (263/225)/1.053 # Hagen et al, ICPRB Report No. 98-5
 #
 # jrr.rc.df <- sen.rc.df
 #
@@ -126,6 +128,7 @@ occ_withdr_req0 <- 70.0
 occ_withdr_max <- 120.0
 occ_withdr_min <- 45.0
 occ_ws_rel_req0 <- 0.0
+cedar_to_occ_inflow <- 591.9/93.4 # from Hagen et al, ICPRB Report No. 98-3
 #
 occ_fixed_ls <- 15 # load-shift amount, mgd
 occ_stor_emerg <- 1000 # emergency storage, below which there are no load-shifts

@@ -7,6 +7,7 @@
 # ts_path <- "input/ts/2038_1998prrism/" 
 # ts_path <- "input/ts/2038_1998_p532_i_a1b/"
 ts_path <- "input/ts/current/" 
+parameters_path <- "input/parameters/"
 #
 ts_output <- "output/" # path of output directory
 

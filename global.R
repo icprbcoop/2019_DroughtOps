@@ -1,26 +1,27 @@
 #------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # Info found online:
   # "global.R is a script that is executed before
   # the application launch. For this reason, it can include the same
   # pieces of code to execute the reactive independent processes,
   # but it also has an additional capability: the objects 
-  # generated in global.R can be used both in server.R and UI.R"
+  # generated in global.R can be used both in server.R and ui.R"
 #------------------------------------------------------------------------------
-# The script, import_data.R, loads in all available time series data. 
-#  Right now the directory with time series data (set by paths.R)
-#  has 2 years of data, from 1929-10-01 to 1931-09-30.
-# date_tsdata_start <- as.Date("1929-10-01")
-# date_tsdata_end <- as.Date("1931-09-30")
+#------------------------------------------------------------------------------
 
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# These scripts take care of preliminaries
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
+# Load packages, define paths, define parameters, and import data ------------- 
 source("code/global/load_packages.R", local = TRUE)
 source("config/paths.R", local = TRUE)
 source("input/parameters/parameters.R", local = TRUE)
-source("code/global/import_data.R", local = TRUE)
-#
-#-----------------------------------------------------------------
-# Block temporarily pasted into global.R - for ease of debugging
-#-----------------------------------------------------------------
-#
+source("code/global/import_data.R", local = TRUE)#
+
+# Classes and functions used by this app --------------------------------------
 source("code/classes/reservoir_class.R", local = TRUE)
 source("code/functions/reservoir_ops/reservoir_ops_init_func.R", local = TRUE)
 source("code/functions/reservoir_ops/reservoir_ops_today_func.R", local = TRUE)
@@ -37,16 +38,23 @@ source("code/functions/simulation/sim_add_days_func.R", local = TRUE)
 source("code/functions/simulation/rule_curve_func.R", local = TRUE)
 source("code/functions/simulation/nbr_rule_curve_func.R", local = TRUE)
 source("code/functions/display/display_graph_res_func.R", local = TRUE)
-#--------------------------------------------------------------------------------
-#functions added by Luke
+
+# Functions added by Luke -----------------------------------------------------
 source("code/functions/display/date_func.R", local = TRUE)
 source("code/functions/display/warning_color_func.R", local = TRUE)
 source("code/functions/display/warning_color_map_func.R", local = TRUE)#this is a lazy Friday fix that should be changed later
 source("code/functions/display/md_drought_map_func.R", local = TRUE)
 source("code/functions/display/va_drought_map_func.R", local = TRUE)
-#--------------------------------------------------------------------------------
-# Make the reservoir objects and reservoir time series df's
-#--------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Create things that need to be accessed by everything
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
+# Make reservoir objects and time series df's ---------------------------------
+#   - the reservoir objects are jrr, sen, occ, pat
+#   - the ts dfs are 
 source("code/server/reservoirs_make.R", local = TRUE) 
 # What this does is create the reservoir "objects", jrr, sen, occ, pat
 #    and the reservor time series, res.ts.df, e.g.:
@@ -70,9 +78,9 @@ source("code/server/state_status_ts_init.R", local = TRUE)
 #    - 1 = Watch
 #    - 0 = Warning
 #    - 0 = Emergency
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # A few needed inputs which will probably be moved at some point
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # 
 lfalls_flowby <- 100 # change to read from parameter file!!!
 mos_0day <- 40 # margin of safety for Patuxent load shift

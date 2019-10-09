@@ -4,20 +4,26 @@
 # The path to the time series is defined by /config/paths.R
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-# Import river flow and reservoir inflow ts:
-#   - temporarily import flows_daily_mgd.csv used in 2018drex
-#   - Luke - next step is to import USGS flow data from Zach's app
-#     and then put it into the format used in flows_daily_mgd.csv
+
+
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-# Make adjustments to Occoquan inflows, and river flows
-#  - Occoquan inflows are increased by UOSA discharge,
-#     and decreased by Lake Manassas operations
-#  - River flow at POR and LFalls are decreased by upstr CU
-#     and increased by WWTP discharges, ie dflow = wwtp - cu
-#     (see parameters.R for values)
-# Daily flow data can be downloaded each day from https://zsmith.shinyapps.io/coop_data_download/
-flows.daily.mgd.df0 <- data.table::fread(paste(ts_path, "flows_daily_mgd.csv", sep = ""),
+# Import streamflow time series:
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
+# Read list of gages: id, location, description -------------------------------
+#   - e.g. 1638500, por, Potomac River at Point of Rocks
+gages <- data.table::fread(paste(parameters_path, "gages.csv", sep = ""),
+                           col.names = c("id", "location", "description"),
+                                         data.table = FALSE)
+
+# Read daily flow data --------------------------------------------------------
+# Daily data can be downloaded from CO-OP's Data Portal:
+#    - link is https://icprbcoop.org/drupal4/icprb/flow-data
+#    - name the csv file flows_daily_cfs
+#    - then save the file to /input/ts/current/
+flows.daily.mgd.df0 <- data.table::fread(paste(ts_path, "flows_daily_cfs.csv", sep = ""),
                                       data.table = FALSE) %>%
   dplyr::mutate(date_time = as.Date(date),
                 month_sim = month(date_time),
