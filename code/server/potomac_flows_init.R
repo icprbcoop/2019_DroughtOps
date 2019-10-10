@@ -11,7 +11,10 @@
 #   - demands_total_unrestricted
 #--------------------------------------------------------------------------------
 potomac.data.df <- flows.daily.mgd.df %>%
+  dplyr::mutate(por_nat = por, below_por = mon_jug + goose,
+                lfalls_nat = lfalls) %>%  
   dplyr:: select(date_time, por_nat, below_por, lfalls_nat)
+
 #
 # # For the moment need to be careful - didn't add enough demand data
 # demands.daily.df <- demands.daily.df %>%

@@ -11,9 +11,12 @@
 #------------------------------------------------------------------------------
 # A. Create a dataframe of reservoir inflows
 #------------------------------------------------------------------------------
-# (This is not really necessary - maybe get rid of)
-#
+
 inflows.df <- flows.daily.mgd.df %>%
+  dplyr::mutate(jrr_in = kitzmiller*kitzmiller_to_jrr_inflow,
+                lsen_in = bennett*bennett_to_sen_inflow,
+                pat_in = unity + cattail + hawlings,
+                occ_in = cedar*cedar_to_occ_inflow) %>%
   dplyr::select(date_time, jrr_in, lsen_in, pat_in, occ_in) %>%
   dplyr::filter(date_time <= date_end,
                 date_time >= date_start)
