@@ -4,10 +4,11 @@
 # First run global.R, which loads all data, paths, functions
 source("global.R", local = TRUE) 
 #
-# date_today is set in /input/parameters/parameters.R, 
-#    but might want to change it
-date_today <- as.Date("1930-02-01")
-#
+# date_today0 is set in /input/parameters/parameters.R, 
+#    but might want to change it, by using date_today
+# date_today <- as.Date("1930-02-01")
+date_today <- date_today0
+
   # Run the main simulation to the hard-coded input, date_today
   #    - ts here is the precursor of the set of reactive values
   ts0 <- list(sen = sen.ts.df0, 

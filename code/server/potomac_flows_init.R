@@ -1,35 +1,45 @@
-#******************************************************************
-# Create two dataframes of Potomac River flows inflow & outflow data
+# *****************************************************************************
+# DESCRIPTION
+# *****************************************************************************
+# Create two dataframes: Potomac River flows inflow & outflow data
 #    and Potomac River simulated flow time series
-#******************************************************************
-#
-#--------------------------------------------------------------------------------
-# Create dataframe of the data needed to compute Potomac flows 
-#--------------------------------------------------------------------------------
-#   - date_time - load in all data within date_start & date_end
-#   - por_nat, below_por, lfalls_nat - coop's "natural" flows
-#   - demands_total_unrestricted
-#--------------------------------------------------------------------------------
-potomac.data.df <- flows.daily.mgd.df %>%
-  dplyr::mutate(por_nat = por, below_por = mon_jug + goose,
-                lfalls_nat = lfalls) %>%  
-  dplyr:: select(date_time, por_nat, below_por, lfalls_nat)
+# *****************************************************************************
+# INPUTS
+# *****************************************************************************
+# flows.daily.mgd.df - has the USGS flow data
+# demands.daily.df - has recent daily average demands
+#    - TEMPORARY: both of these dfs have values for all 365 days of
+#      current year to keep app from breaking;
+#      real values are from Drupal and rest are dummy values
+#******************************************************************************
+# OUTPUTS
+#******************************************************************************
+# potomac.data.df - just the flow data we need, plus total WMA demand
+# potomac.ts.df0
+# potomac.ts.df
+#******************************************************************************
 
-#
-# # For the moment need to be careful - didn't add enough demand data
-# demands.daily.df <- demands.daily.df %>%
-#   dplyr:: filter(date_time <= date_end,
-#                  date_time >= date_start)
-#
+#------------------------------------------------------------------------------
+# Create df of key Potomac River flows and demands
+#------------------------------------------------------------------------------
+
+# Add flows to the df ---------------------------------------------------------
+potomac.data.df <- flows.daily.mgd.df %>%
+  dplyr::mutate(por_nat = por, below_por = mon_jug + goose) %>%  
+  dplyr:: select(date_time, por_nat, below_por, lfalls)
+
+# Add the total daily WMA demand ----------------------------------------------
 potomac.data.df <- left_join(potomac.data.df, 
                              demands.daily.df,
                              by = "date_time") %>%
+  mutate(lfalls_nat = lfalls + d_total) %>%
   select(date_time, por_nat, below_por, 
          lfalls_nat, d_total)
 #
 # Want to change initialization of this key df to just passively graph up to yesterday
 #   - in 2018drex was initialized with just 1 row of values (for date_start)
-#   - now want it initialized with rows from date_start to (date_today0 - 1)
+#   - now want it initialized with rows from date_start to 
+#     "yesterday" = (date_today0 - 1)
 #     in order to have time series for graphing purposes
 #     (for the time being there will be some dummy values - see code below,
 #     but ok since they won't be used)
@@ -37,7 +47,7 @@ potomac.data.df00 <- potomac.data.df %>%
   filter(date_time < date_today0)
 
 n_today <- length(potomac.data.df00$date_time)
-#
+
 #--------------------------------------------------------------------------------
 # Create and initialize dataframe of Potomac simulated flow time series
 #--------------------------------------------------------------------------------
@@ -90,7 +100,4 @@ potomac.ts.df0 <- potomac.data.df00 %>%
          withdr_pot_fw, withdr_pot_fw_lagged,
          withdr_pot_wssc, need_0day, need_1day, withdr_pot_wa)
 potomac.ts.df <- potomac.ts.df0
-#
-# Make the 9-day flow forecast, using our old empirical eq., also used in PRRISM
-#--------------------------------------------------------------------------------
 

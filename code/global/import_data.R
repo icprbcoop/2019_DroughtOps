@@ -1,28 +1,38 @@
 # *****************************************************************************
+# DESCRIPTION
+# *****************************************************************************
 # This script imports time series inputs (ts).
 # The path to the time series data is defined by /config/paths.R
 # *****************************************************************************
-# Inputs
+# INPUTS
 # *****************************************************************************
 # gages.csv - file listing USGS stream gages we use
 # flows_daily_cfs.csv - current daily streamflow data
-#    - daily data can be downloaded from CO-OP's Data Portal
-#    - link is https://icprbcoop.org/drupal4/icprb/flow-data
-#    - name appropriately then save the file to /input/ts/current/
+#   - daily data can be downloaded from CO-OP's Data Portal
+#   - link is https://icprbcoop.org/drupal4/icprb/flow-data
+#   - name appropriately then save the file to /input/ts/current/
 # coop_pot_withdrawals.csv - WMA supplier hourly withdrawal data
-#    - daily data can be downloaded from CO-OP's Data Portal
-#    - link is https://icprbcoop.org/drupal4/products/coop_pot_withdrawals.csv
-#    - save the file to /input/ts/current/
+#   - daily data can be downloaded from CO-OP's Data Portal
+#   - link is https://icprbcoop.org/drupal4/products/coop_pot_withdrawals.csv
+#   - save the file to /input/ts/current/
+# state_drought_status.csv - time series of gw, precip, etc indices for MD, VA
+#   - this is currently a dummy file from 2018 DREX
+# Fake reservoir ops dfs, e.g., drex2018_output_sen.csv
+#   - used to initialize the res.ts.df's until I decide how to handle this
 # *****************************************************************************
-# Outputs
+# OUTPUTS
 # *****************************************************************************
 # flows.daily.mgd.df
-#    - used to create inflows.df in reservoirs_make.R
-#    - used to create potomac.data.df in potomac_flows_init.R
+#   - used to create inflows.df in reservoirs_make.R
+#   - used to create potomac.data.df in potomac_flows_init.R
 # demands.daily.df
+#   - used to create potomac.data.df in potomac_flows_init.R
+#   - used in sim_main_func in call to simulation_func
+#   - used in sim_add_days_func in call to simulation_func
 # state.drought.df
-#    - used in state_status_ts_init.R
-#    - used in state_indices_update_func.R
+#   - used in state_status_ts_init.R
+#   - used in state_indices_update_func.R
+# sen.ts.df00, pat.ts.df00, ..., from date_start to date_end (from parameters)
 # *****************************************************************************
 
 #------------------------------------------------------------------------------
@@ -31,7 +41,7 @@
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-# Read list of gages: id, location, description -------------------------------
+# Read list of gages: has id, location, description ---------------------------
 #   - e.g. 1638500, por, Potomac River at Point of Rocks
 gages <- data.table::fread(paste(parameters_path, "gages.csv", sep = ""),
                            col.names = c("id", "location", "description"),
@@ -57,7 +67,7 @@ flows.daily.mgd.df <- flows.daily.cfs.df %>%
   dplyr::mutate_at(2:32, func_cfs_to_mgd)
 
 # Fill in df with constant future flows so that app won't break ---------------
-#   - later these can be replace with forecasted flows
+#   - later these can be replaced with forecasted flows
 data_first_date <- head(flows.daily.mgd.df$date_time, 1)
 data_last_date <- tail(flows.daily.mgd.df$date_time, 1)
 data_last <- tail(flows.daily.mgd.df[, 2:32], 1)
@@ -97,10 +107,12 @@ demands.hourly.df <- demands.hourly.df %>%
                 d_wssc = wssc,
                 d_fw_w = fw,
                 d_lw = lw) %>%
-  dplyr::mutate(d_wa = wa_gf + wa_lf,
+  dplyr::mutate(date_time = as.POSIXct(date_time, tz = "EST"),
+                date = round_date(date_time, unit = "days"),
+                d_wa = wa_gf + wa_lf,
                 d_fw_e = 70, d_fw_c = 20,
-                d_total = d_fw_w + d_fw_e + d_fw_c + d_wssc + d_lw + d_wa,
-                date = as.Date(date_time, "%Y-%m-%d")) %>%
+                d_total = d_fw_w + d_fw_e + d_fw_c + d_wssc + d_lw + d_wa
+                ) %>%
   dplyr::select(-wa_gf, -wa_lf)
 
 # Compute daily demands -------------------------------------------------------
@@ -109,12 +121,14 @@ demands.daily.df <- demands.hourly.df %>%
   group_by(date) %>%
   summarise_all(mean) %>%
   rename(date_time = date) %>%
+  # mutate(date_time = as.POSIXct(date_time, tz = "EST")) %>%
   ungroup()
 
 # Fill in df with constant future demands so that app won't break -------------
 data_first_date <- head(demands.daily.df$date_time, 1)
 data_last_date <- tail(demands.daily.df$date_time, 1)
 data_last <- tail(demands.daily.df[, 2:8], 1)
+data_first <- head(demands.daily.df[, 2:8], 1)
 # current_year <- year(data_last_date)
 # year_final_date <- as.POSIXct(paste(as.character(current_year),
 #                                     "-12-31", sep = ""))
@@ -132,27 +146,37 @@ for(i in 1:days_left_in_year) {
 year_first_date <- paste(as.character(current_year), "-01-01", sep = "")
 year_first_date <- as.Date(year_first_date)
 data_first_date <- as.Date(data_first_date)
-prior_length <- as.numeric(difftime(data_first_date,
-                                    year_first_date, units = "days"))
+days_prior_in_year <- as.numeric(difftime(data_first_date,
+                                    year_first_date, 
+                                    units = "days"))
+prior_date <- data_first_date
+for(i in 1:days_prior_in_year) {
+  prior_date <- prior_date - days(1)
+  prior_row <- cbind(date_time = prior_date, data_first)
+  demands.daily.df <- rbind(demands.daily.df, prior_row)
+}
+demands.daily.df <- demands.daily.df %>%
+  dplyr::arrange(date_time) %>%
+  dplyr::mutate(date_time = round_date(date_time, unit = "days"))
 
-# For now put in constant prior demands based on annuals ----------------------
-d_fw_w0 <- 120
-d_fw_c0 <- 20
-d_fw_e0 <- 70
-d_wa0 <- 140
-d_wssc0 <- 160
-d_lw0 <- 15
-d_total0 <- 510
-early_dates <- seq(year_first_date, by = "day", length.out = prior_length)
-early_dates.df <- as.data.frame(early_dates) %>%
-  rename(date_time = early_dates) %>%
-  dplyr::mutate(d_total = d_total0,
-                d_fw_w = d_fw_w0, d_fw_e = d_fw_e0, d_fw_c = d_fw_c0,
-                d_wssc = d_wssc0,
-                d_wa = d_wa0,
-                d_lw = d_lw0)
-demands.daily.df <- rbind(early_dates.df, demands.daily.df) %>%
-  dplyr::mutate(date_time = as.POSIXct(date_time))
+# # For now put in constant prior demands based on annuals ----------------------
+# d_fw_w0 <- 120
+# d_fw_c0 <- 20
+# d_fw_e0 <- 70
+# d_wa0 <- 140
+# d_wssc0 <- 160
+# d_lw0 <- 15
+# d_total0 <- 510
+# early_dates <- seq(year_first_date, by = "day", length.out = prior_length)
+# early_dates.df <- as.data.frame(early_dates) %>%
+#   rename(date_time = early_dates) %>%
+#   dplyr::mutate(d_total = d_total0,
+#                 d_fw_w = d_fw_w0, d_fw_e = d_fw_e0, d_fw_c = d_fw_c0,
+#                 d_wssc = d_wssc0,
+#                 d_wa = d_wa0,
+#                 d_lw = d_lw0)
+# demands.daily.df <- rbind(early_dates.df, demands.daily.df) %>%
+#   dplyr::mutate(date_time = as.POSIXct(date_time, tz = "EST"))
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Import time series representing state drought status.
@@ -179,8 +203,8 @@ state.drought.df <- data.table::fread(paste(ts_path, "state_drought_status.csv",
 #   - these will be used to initialize the res dfs from date_start to date_today0 (ie today())
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-print("date_today0")
-print(date_today0)
+# print("date_today0")
+# print(date_today0)
 sen.ts.df00 <- data.table::fread(paste(ts_path, "drex2018_output_sen.csv", sep = ""),
                                 data.table = FALSE) %>%
   dplyr::mutate(date_time = as.Date(date_time)) %>%

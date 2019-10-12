@@ -1,14 +1,26 @@
-# Paths
-#
-# Time series scenario
-#
-# Here are 2018drex data - from PRRISM & from CBP climate change runs
-#   with daily variation from 1998-10-01 to 2000-09-30
+# *****************************************************************************
+# DESCRIPTION
+# *****************************************************************************
+# Define all paths here
+# *****************************************************************************
+# INPUTS - NA
+# *****************************************************************************
+
+# *****************************************************************************
+# OUTPUTS - NA
+# *****************************************************************************
+
+# Time series scenario path ---------------------------------------------------
+
+# 2018drex
+#   - with daily variation from 1998-10-01 to 2000-09-30
 # ts_path <- "input/ts/2038_1998prrism/" 
 # ts_path <- "input/ts/2038_1998_p532_i_a1b/"
-ts_path <- "input/ts/current/" 
-parameters_path <- "input/parameters/"
-#
-ts_output <- "output/" # path of output directory
 
+# Path for current operations
+ts_path <- "input/ts/current/" 
+
+# Other paths -----------------------------------------------------------------
+parameters_path <- "input/parameters/"
+ts_output <- "output/" # path of output directory
 map_path <- "data/Drought_Regions" #MD shapefiles
