@@ -1,13 +1,20 @@
 output$demands <- renderPlot({
+
+# plot total FW demand
+  demands.plot.df <- demands.daily.df %>%
+    mutate(p_fw = d_fw_e + d_fw_w) %>%
+    select(date_time, p_fw, d_wssc, d_wa, d_lw)
   
-  #gather the data into long format
-  demands.df <- gather(demands_raw.df,site, flow, 2:6)
+# gather the data into long format; use the dynamic plot ranges
+  demands.df <- gather(demands.plot.df, key = "location", 
+                       value = "flow", -date_time) %>%
+    mutate(Date = date_time) %>%
+    filter(Date >= input$plot_range[1],
+           Date <= input$plot_range[2])
   
-  #turn dates to date_time type
-  demands.df$DateTime <- as_datetime(as.character(demands.df$DateTime))
-  
-  #plot the data
-  ggplot(demands.df, aes(x = DateTime, y = flow)) + geom_line(aes(linetype = site, colour = site))
+# plot the data
+  ggplot(demands.df, aes(x = date_time, y = flow)) + 
+    geom_line(aes(colour = location))
   
 })
 

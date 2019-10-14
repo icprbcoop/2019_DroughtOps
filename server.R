@@ -18,7 +18,7 @@ shinyServer(function(input, output, session) {
   
   #ten day tab
   
-  source("code/server/ten_day/ten_day_server.R", local=TRUE)
+  source("code/server/ten_day_ops_server.R", local=TRUE)
   
   #long term tab
   
