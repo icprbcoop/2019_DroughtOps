@@ -36,12 +36,9 @@ tabPanel("10-Day Ops",
              ), # end of 1st main column - with graphs
              column( # this is the 2nd main column - with values & triggers
                width = 6,
-               box(
-                 title = "Put some values here - like 9-day deficit",
-                 width = NULL
-                 # plotOutput("jrrStorageReleases", height = "190px")
-               )
-               # valueBoxOutput("por_flow", width = NULL),
+               valueBoxOutput("lfalls_empirical_9day_fc", width = NULL),
+               valueBoxOutput("wma_withdr_9day_fc", width = NULL),
+               valueBoxOutput("luke", width = NULL)
                # valueBoxOutput("lfalls_obs", width = NULL)
              ) # end of 2nd main column
            ) # end of major column that contains whole body
