@@ -49,6 +49,7 @@ gages <- data.table::fread(paste(parameters_path, "gages.csv", sep = ""),
 list_gage_locations <- c("date", gages$location)
 
 # Read daily flow data --------------------------------------------------------
+#   - for daily data use as.Date - getting rid of time
 flows.daily.cfs.df <- data.table::fread(
   paste(ts_path, "flows_daily_cfs.csv", sep = ""),
   header = TRUE,
@@ -57,7 +58,7 @@ flows.daily.cfs.df <- data.table::fread(
   col.names = list_gage_locations,
   na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", -999999),
   data.table = FALSE) %>%
-  dplyr::mutate(date_time = as.POSIXct(date, tz = "EST")) %>%
+  dplyr::mutate(date_time = as.Date(date)) %>%
   select(-date) %>%
   select(date_time, everything())
 
@@ -72,9 +73,9 @@ data_first_date <- head(flows.daily.mgd.df$date_time, 1)
 data_last_date <- tail(flows.daily.mgd.df$date_time, 1)
 data_last <- tail(flows.daily.mgd.df[, 2:32], 1)
 current_year <- year(data_last_date)
-year_final_date <- as.POSIXct(paste(as.character(current_year),
+year_final_date <- as.Date(paste(as.character(current_year),
                                     "-12-31", sep = ""))
-days_left_in_year <- as.numeric(as.POSIXct(year_final_date) 
+days_left_in_year <- as.numeric(year_final_date 
                                 - data_last_date)
 next_date <- data_last_date
 
@@ -121,7 +122,7 @@ demands.daily.df <- demands.hourly.df %>%
   group_by(date) %>%
   summarise_all(mean) %>%
   rename(date_time = date) %>%
-  # mutate(date_time = as.POSIXct(date_time, tz = "EST")) %>%
+  mutate(date_time = as.Date(date_time)) %>%
   ungroup()
 
 # Fill in df with constant future demands so that app won't break -------------
@@ -132,8 +133,9 @@ data_first <- head(demands.daily.df[, 2:8], 1)
 # current_year <- year(data_last_date)
 # year_final_date <- as.POSIXct(paste(as.character(current_year),
 #                                     "-12-31", sep = ""))
-days_left_in_year <- as.numeric(difftime(year_final_date,
-                               data_last_date, units = "days"))
+# days_left_in_year <- as.numeric(difftime(year_final_date,
+#                                data_last_date, units = "days"))
+days_left_in_year <- as.numeric(year_final_date - data_last_date)
 next_date <- data_last_date
 
 for(i in 1:days_left_in_year) {

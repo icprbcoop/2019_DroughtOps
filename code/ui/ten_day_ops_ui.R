@@ -16,7 +16,7 @@ tabPanel("10-Day Ops",
                width = 6,
                fluidRow( # row with Little Falls flow graph
                  box(
-                   title = "Little Falls flow - observed and forecasted",
+                   title = "Little Falls flows - observed and forecasted",
                    width = NULL,
                    plotOutput("ten_day_plot", height = plot.height, width = plot.width)
                    # plotOutput("potomacFlows", height = "220px")
