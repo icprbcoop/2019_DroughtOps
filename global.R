@@ -22,11 +22,18 @@
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-# Load packages, define paths, define parameters, and import data ------------- 
-source("code/global/load_packages.R", local = TRUE)
+# Load packages  
+#-----use this one when not publishing to shinyapp.io, comment out when publishing:
+#source("code/global/load_packages.R", local = TRUE)
+#-----use this one when publishing, can comment out otherwise:
+source("code/global/import_packages.R", local = TRUE)
+#----------------------------------------------------------------------
+
+#-----define paths, define parameters, and import data ----------------------
 source("config/paths.R", local = TRUE)
 source("input/parameters/parameters.R", local = TRUE)
 source("code/global/import_data.R", local = TRUE)#
+#----------------------------------------------------------------------------
 
 # Read classes and functions --------------------------------------------------
 source("code/classes/reservoir_class.R", local = TRUE)
