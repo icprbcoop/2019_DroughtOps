@@ -22,7 +22,7 @@
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-# Load packages  
+#-----Load packages  
 #-----use this one when not publishing to shinyapp.io, comment out when publishing:
 #source("code/global/load_packages.R", local = TRUE)
 #-----use this one when publishing, can comment out otherwise:
