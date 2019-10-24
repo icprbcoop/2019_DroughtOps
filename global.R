@@ -29,6 +29,14 @@
 source("code/global/import_packages.R", local = TRUE)
 #----------------------------------------------------------------------
 
+#this is the date today.  it is the one and only.  use this
+date_today0 <- as.Date(today())
+
+#-----drought map functions are declared before they are used in import data
+source("code/functions/display/md_drought_map_func.R", local = TRUE)
+source("code/functions/display/va_drought_map_func.R", local = TRUE)
+#----------------------------------------------------------------------------
+
 #-----define paths, define parameters, and import data ----------------------
 source("config/paths.R", local = TRUE)
 source("input/parameters/parameters.R", local = TRUE)
@@ -59,8 +67,7 @@ source("code/functions/display/date_func.R", local = TRUE)
 source("code/functions/display/warning_color_func.R", local = TRUE)
 # this is a lazy Friday fix that should be changed later:
 source("code/functions/display/warning_color_map_func.R", local = TRUE)
-source("code/functions/display/md_drought_map_func.R", local = TRUE)
-source("code/functions/display/va_drought_map_func.R", local = TRUE)
+
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -107,6 +114,5 @@ source("code/server/state_status_ts_init.R", local = TRUE)
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-#this is the date today.  it is the one and only.  use this
-date_today0 <- as.Date(today())
+
 
