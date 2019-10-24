@@ -67,6 +67,15 @@ source("code/functions/display/va_drought_map_func.R", local = TRUE)
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
+# # Define today's date ---------------------------------------------------------
+# #   - will usually be today
+# #   - but want option to change to fake date for exercises
+# 
+# #---toggle
+# date_today <- today()
+# # date_today <- as.date("1999-07-01")
+# #----
+
 # Make reservoir objects and time series df's ---------------------------------
 #   - the reservoir objects are jrr, sen, occ, pat
 #   - the ts dfs are 
@@ -138,5 +147,12 @@ western_region_t <- spTransform(western_dslv, CRS("+init=epsg:4326"))
 md_drought_map = md_drought_map_func(date_today0)
 
 #calls function to get the latest version of the virginia drought map
-va_drought_map = va_drought_map_func()
+#---toggle
+##for day to day
+#va_drought_map = va_drought_map_func()
+
+##to publish
+# project.dir <- rprojroot::find_rstudio_root_file()
+# va_drought_map = file.path(project.dir,'/input/images/va_drought_placeholder.png')
+#---
 
