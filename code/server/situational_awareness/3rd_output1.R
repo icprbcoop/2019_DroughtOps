@@ -215,7 +215,6 @@ output$QA_out <- renderValueBox({
 output$date_text  <- renderText({
   potomac.ts.df <- ts$flows
   test_date <- last(potomac.ts.df$date_time)
-  #    paste("Today's date is", as.character(test_date$test_date_value))
-  paste("Today's date is ", as.character(test_date),"  ")
+  paste("Today's date is ", as.character(date_today0),"  ")
 })
 #

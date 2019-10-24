@@ -24,7 +24,7 @@ date_start <- as.Date("2019-01-01")
 date_end <- as.Date("2019-12-31")
 
 
-date_today0 <- as.Date(today())
+#date_today0 <- as.Date(today())
 
 # Conversion factors ------------------------------------------------
 mgd_to_cfs <- 1.547

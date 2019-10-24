@@ -228,6 +228,31 @@ pat.ts.df00 <- data.table::fread(paste(ts_path, "drex2018_output_pat.csv", sep =
   dplyr:: filter(date_time <= date_end,
                  date_time >= date_start)
 
+#----------------------------------------shapefile load----------------------------------
+# read map shapefiles in ---------------------
+clipcentral = readOGR(dsn=map_path, layer = "clipcentral")
+western_dslv = readOGR(dsn=map_path, layer = "western_dslv")
+
+#transform map shapefiles  ---------------------
+clipcentral_t <- spTransform(clipcentral, CRS("+init=epsg:4326"))
+western_region_t <- spTransform(western_dslv, CRS("+init=epsg:4326"))
+#----------------------------------------------------------------------------------------
+
+
+#----------------------drought maps updating---------------------------------------------
+#calls function to get the latest version of the maryland drought map
+md_drought_map = md_drought_map_func(date_today0)
+
+#calls function to get the latest version of the virginia drought map
+#---toggle
+##for day to day
+va_drought_map = va_drought_map_func()
+
+##to publish
+# project.dir <- rprojroot::find_rstudio_root_file()
+# va_drought_map = file.path(project.dir,'/global/images/va_drought_placeholder.png')
+#---
+#----------------------------------------------------------------------------------------
 
 
 # #------------------------------

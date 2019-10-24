@@ -33,6 +33,7 @@ source("code/global/import_packages.R", local = TRUE)
 source("config/paths.R", local = TRUE)
 source("input/parameters/parameters.R", local = TRUE)
 source("code/global/import_data.R", local = TRUE)#
+source("input/parameters/css_ui_values.R", local = TRUE)
 #----------------------------------------------------------------------------
 
 # Read classes and functions --------------------------------------------------
@@ -106,53 +107,6 @@ source("code/server/state_status_ts_init.R", local = TRUE)
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-# ui inputs - Luke, can these all be moved to parameters.R? -------------------
-plot.height <- "340px"
-plot.width <- "95%"
-
-# colors for squares - Luke, moved? -------------------------------------------
-green <- "background-color:#5CC33D"
-yellow <- "background-color:yellow"
-orange <- "background-color:orange"
-red <- "background-color:red"
-navy <- "background-color:navy"
-black <- "background-color: black"
-
-# colors for MD drought map - Luke, moved? ------------------------------------
-map_green <- "#5CC33D"
-map_yellow <- "yellow"
-map_orange <- "orange"
-map_red <- "red"
-map_black <- "black"
-
-# read map shapefiles in - Luke, moved to import_data.R? ----------------------
-clipcentral = readOGR(dsn=map_path, layer = "clipcentral")
-western_dslv = readOGR(dsn=map_path, layer = "western_dslv")
-
-#transform map shapefiles - Luke, moved to import_data.R? ---------------------
-clipcentral_t <- spTransform(clipcentral, CRS("+init=epsg:4326"))
-western_region_t <- spTransform(western_dslv, CRS("+init=epsg:4326"))
-
-#-------------------------------------------------------------------
-#paths to data for warning squares pulled from template verion
-#these variables need to be changed to value outputs of 
-#actual sim when it's up and running
-
-# my_data_p <-fread(paste(ts_path, "va_shenandoah_p.csv", sep = ""))
-# my_data_q = fread(paste(ts_path,"va_shenandoah_q.csv", sep = ""))
-# my_data_s = fread(paste(ts_path,"va_shenandoah_stor.csv", sep = ""))
-# my_data_g = fread(paste(ts_path,"va_shenandoah_gw.csv", sep = ""))
-
-#calls function to get the latest version of the maryland drought map
-md_drought_map = md_drought_map_func(date_today0)
-
-#calls function to get the latest version of the virginia drought map
-#---toggle
-##for day to day
-#va_drought_map = va_drought_map_func()
-
-##to publish
-# project.dir <- rprojroot::find_rstudio_root_file()
-# va_drought_map = file.path(project.dir,'/input/images/va_drought_placeholder.png')
-#---
+#this is the date today.  it is the one and only.  use this
+date_today0 <- as.Date(today())
 
