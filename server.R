@@ -5,9 +5,7 @@
 shinyServer(function(input, output, session) {
   # multi-use
   source("code/server/dates_server.R", local = TRUE)
-  source("code/server/flow_recessions.R")
-  
-  #situational awareness tab
+    #situational awareness tab
   source("code/server/situational_awareness/1st_sim.R", local=TRUE)
   source("code/server/situational_awareness/2nd_plot.R", local=TRUE)
   source("code/server/situational_awareness/3rd_output1.R", local=TRUE)

@@ -22,10 +22,9 @@
 # *****************************************************************************
 # OUTPUTS
 # *****************************************************************************
-# flows.daily.mgd.df
-#   - used to create inflows.df in reservoirs_make.R
-#   - used to create potomac.data.df in potomac_flows_init.R
-# demands.daily.df
+# flows.daily.csv.df
+#   - used in complete_daily_flows.R to create flows.daily.mgd.df
+# demands.daily.df - really withdrawals right now
 #   - used to create potomac.data.df in potomac_flows_init.R
 #   - used in sim_main_func in call to simulation_func
 #   - used in sim_add_days_func in call to simulation_func
@@ -44,8 +43,8 @@
 # Read list of gages: has id, location, description ---------------------------
 #   - e.g. 1638500, por, Potomac River at Point of Rocks
 gages <- data.table::fread(paste(parameters_path, "gages.csv", sep = ""),
-                           col.names = c("id", "location", "description"),
-                                         data.table = FALSE)
+                           header = TRUE,
+                           data.table = FALSE)
 list_gage_locations <- c("date", gages$location)
 
 # Read daily flow data --------------------------------------------------------
@@ -62,37 +61,14 @@ flows.daily.cfs.df <- data.table::fread(
   select(-date) %>%
   select(date_time, everything())
 
-# Convert flows to mgd --------------------------------------------------------
-func_cfs_to_mgd <- function(cfs) {round(cfs/mgd_to_cfs,0)}
-flows.daily.mgd.df <- flows.daily.cfs.df %>%
-  dplyr::mutate_at(2:32, func_cfs_to_mgd)
-
-# Fill in df with constant future flows so that app won't break ---------------
-#   - later these can be replaced with forecasted flows
-data_first_date <- head(flows.daily.mgd.df$date_time, 1)
-data_last_date <- tail(flows.daily.mgd.df$date_time, 1)
-data_last <- tail(flows.daily.mgd.df[, 2:32], 1)
-current_year <- year(data_last_date)
-year_final_date <- as.Date(paste(as.character(current_year),
-                                    "-12-31", sep = ""))
-days_left_in_year <- as.numeric(year_final_date 
-                                - data_last_date)
-next_date <- data_last_date
-
-for(i in 1:days_left_in_year) {
-  next_date <- next_date + days(1)
-  next_row <- cbind(date_time = next_date, data_last)
-  flows.daily.mgd.df <- rbind(flows.daily.mgd.df, next_row)
-}
-
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-# Import a time series of recent WMA system demands and demand forecasts
+# Import a time series of recent WMA system withdrawals and withdr forecasts
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
 # Read hourly data --------------------------------------------------------
-demands.hourly.df <- data.table::fread(
+withdr.hourly.df <- data.table::fread(
   paste(ts_path, "coop_pot_withdrawals.csv", sep = ""),
   skip = 10,
   header = TRUE,
@@ -102,39 +78,40 @@ demands.hourly.df <- data.table::fread(
   data.table = FALSE)
 
 # Get df in necessary format --------------------------------------------------
-demands.hourly.df <- demands.hourly.df %>%
+withdr.hourly.df <- withdr.hourly.df %>%
   dplyr::rename_all(tolower) %>% # switch to lowercase col names
   dplyr::rename(date_time = datetime, 
-                d_wssc = wssc,
-                d_fw_w = fw,
-                d_lw = lw) %>%
+                w_wssc = wssc,
+                w_fw_w = fw,
+                w_lw = lw) %>%
   dplyr::mutate(date_time = as.POSIXct(date_time, tz = "EST"),
                 date = round_date(date_time, unit = "days"),
-                d_wa = wa_gf + wa_lf,
-                d_fw_e = 70, d_fw_c = 20,
-                d_total = d_fw_w + d_fw_e + d_fw_c + d_wssc + d_lw + d_wa
+                w_wa = wa_gf + wa_lf,
+                w_fw_e = 70, w_fw_c = 20,
+                # total Potomac withdrawals:
+                w_pot_total = w_fw_w + w_wssc + w_lw + w_wa
                 ) %>%
   dplyr::select(-wa_gf, -wa_lf)
 
-# Compute daily demands -------------------------------------------------------
-demands.daily.df <- demands.hourly.df %>%
+# Compute daily withdrawals ---------------------------------------------------
+demands.daily.df <- withdr.hourly.df %>%
   select(-date_time) %>%
   group_by(date) %>%
   summarise_all(mean) %>%
-  rename(date_time = date) %>%
+  rename(date_time = date, d_wa = w_wa, d_fw_w = w_fw_w, d_lw = w_lw,
+         d_wssc = w_wssc, d_pot_total = w_pot_total, 
+         d_fw_e = w_fw_e, d_fw_c = w_fw_c) %>%
   mutate(date_time = as.Date(date_time)) %>%
   ungroup()
 
-# Fill in df with constant future demands so that app won't break -------------
+# # Fill in df with full year of demands so that app won't break --------------
 data_first_date <- head(demands.daily.df$date_time, 1)
 data_last_date <- tail(demands.daily.df$date_time, 1)
 data_last <- tail(demands.daily.df[, 2:8], 1)
 data_first <- head(demands.daily.df[, 2:8], 1)
-# current_year <- year(data_last_date)
-# year_final_date <- as.POSIXct(paste(as.character(current_year),
-#                                     "-12-31", sep = ""))
-# days_left_in_year <- as.numeric(difftime(year_final_date,
-#                                data_last_date, units = "days"))
+current_year <- year(data_last_date)
+year_final_date <- as.Date(paste(as.character(current_year),
+                                    "-12-31", sep = ""))
 days_left_in_year <- as.numeric(year_final_date - data_last_date)
 next_date <- data_last_date
 
@@ -161,24 +138,6 @@ demands.daily.df <- demands.daily.df %>%
   dplyr::arrange(date_time) %>%
   dplyr::mutate(date_time = round_date(date_time, unit = "days"))
 
-# # For now put in constant prior demands based on annuals ----------------------
-# d_fw_w0 <- 120
-# d_fw_c0 <- 20
-# d_fw_e0 <- 70
-# d_wa0 <- 140
-# d_wssc0 <- 160
-# d_lw0 <- 15
-# d_total0 <- 510
-# early_dates <- seq(year_first_date, by = "day", length.out = prior_length)
-# early_dates.df <- as.data.frame(early_dates) %>%
-#   rename(date_time = early_dates) %>%
-#   dplyr::mutate(d_total = d_total0,
-#                 d_fw_w = d_fw_w0, d_fw_e = d_fw_e0, d_fw_c = d_fw_c0,
-#                 d_wssc = d_wssc0,
-#                 d_wa = d_wa0,
-#                 d_lw = d_lw0)
-# demands.daily.df <- rbind(early_dates.df, demands.daily.df) %>%
-#   dplyr::mutate(date_time = as.POSIXct(date_time, tz = "EST"))
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Import time series representing state drought status.

@@ -25,16 +25,16 @@
 
 # Add flows to the df ---------------------------------------------------------
 potomac.data.df <- flows.daily.mgd.df %>%
-  dplyr::mutate(por_nat = por, below_por = mon_jug + goose) %>%  
+  dplyr::mutate(por_nat = por, below_por = monoc_jug + goose) %>%  
   dplyr:: select(date_time, por_nat, below_por, lfalls)
 
 # Add the total daily WMA demand ----------------------------------------------
 potomac.data.df <- left_join(potomac.data.df, 
                              demands.daily.df,
                              by = "date_time") %>%
-  mutate(lfalls_nat = lfalls + d_total) %>%
+  mutate(lfalls_nat = lfalls + d_pot_total) %>%
   select(date_time, por_nat, below_por, 
-         lfalls_nat, d_total)
+         lfalls_nat, d_pot_total)
 #
 # Want to change initialization of this key df to just passively graph up to yesterday
 #   - in 2018drex was initialized with just 1 row of values (for date_start)
@@ -74,7 +74,7 @@ potomac.ts.df0 <- potomac.data.df00 %>%
          dQ_md = 0.0, # ''
          lfalls_obs_fc9 = 1000,
          lfalls_obs_fc1 = 1000,
-         demand = d_total, # 
+         demand = d_pot_total, # 
          sen_outflow = 0.0, # represents reservoir outflow
          sen_outflow_lagged = sen_outflow_lagged_default, # one-day lag
          sen_watershed = sen_other, # represents other seneca cr watershed flows

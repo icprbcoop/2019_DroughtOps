@@ -1,31 +1,32 @@
-1646500,lfalls,Potomac River at Little Falls
-1645000,seneca,Seneca Cr at Dawsonville
-1644000,goose,Goose Cr near Leesburg
-1643000,mon_jug,Monocacy at Jug Br
-1638500,por,Potomac River at Point of Rocks
-1636500,shen_mill,Shenandoah River at Millville
-1619500,antietam,Antietam Cr near Sharpsburg
-1616500,opequon,Opequon Cr near Martinsburg
-1614500,conoco,Conococheague at Fairview
-1613000,hanc,Potomac River at Hancock
-1611500,cacapon,Cacapon near Great Cacapon
-1610155,sideling,Sideling Hill Cr near Bellegrove
-1610000,paw,Potomac River at PawPaw
-1609000,town,Town Cr near Oldtown
-1608500,sbr,S Br Potomac River near Springfield
-1604500,patterson,Patterson Cr near Headsville
-1603000,nbp_cumb,N Br Potomac River near Cumberland
-1601500,wills,Wills Cr near Cumberland
-1598500,luke,N Br Potomac River at Luke
-1595800,barnum,N Br Potomac River at Barnum
-1597500,bloomington,Savage River below Savage dam near Bloomington
-1595500,kitzmiller,N Br Potomac River at Kitzmiller
-1596500,barton,Savage River near Barton
-1595790,jrr_level,Jennings Randolph Reservoir (water level)
-1597490,sav_level,Savage Reservoir (water level)
-1644148,edwards_level,Potomac River at Edwards Ferry (water level)
-1643500,bennett,Bennett Cr at Park Mills
-1591000,unity,Patuxent River near Unity
-1591400,cattail,Cattail Cr near Glenwood
-1591700,hawlings,Hawlings River near Sandy Spring
-1656000,cedar,Cedar Run near Catlett
+gage_id,location,area_mi2,k,description
+1646500,lfalls,11560,0.04,Potomac River at Little Falls
+1645000,seneca,101,0.038,Seneca Cr at Dawsonville
+1644000,goose,332,0.114,Goose Cr near Leesburg
+1643000,monoc_jug,817,0.05,Monocacy at Jug Br
+1638500,por,9651,0.042,Potomac River at Point of Rocks
+1636500,shen_mill,3041,0.035,Shenandoah River at Millville
+1619500,antietam,281,0.022,Antietam Cr near Sharpsburg
+1616500,opequon,273,0.022,Opequon Cr near Martinsburg
+1614500,conoco,494,0.035,Conococheague at Fairview
+1613000,hancock,4064,0.055,Potomac River at Hancock
+1611500,cacapon,675,0.034,Cacapon near Great Cacapon
+1610155,sideling,102,0.17,Sideling Hill Cr near Bellegrove
+1610000,pawpaw,3129,0.04,Potomac River at PawPaw
+1609000,town,148,0.093,Town Cr near Oldtown
+1608500,sbr,1461,0.045,S Br Potomac River near Springfield
+1604500,patterson,221,0.09,Patterson Cr near Headsville
+1603000,nbp_cumb,877,0.04,N Br Potomac River near Cumberland
+1601500,wills,247,0.05,Wills Cr near Cumberland
+1598500,luke,406,0.04,N Br Potomac River at Luke
+1595800,barnum,266,0.04,N Br Potomac River at Barnum
+1597500,bloomington,106,0.04,Savage River below Savage dam near Bloomington
+1595500,kitzmiller,255,0.04,N Br Potomac River at Kitzmiller
+1596500,barton,49,0.04,Savage River near Barton
+1595790,jrr_level,NA,NA,Jennings Randolph Reservoir (water level)
+1597490,sav_level,NA,NA,Savage Reservoir (water level)
+1644148,edwards_level,11130,0.04,Potomac River at Edwards Ferry (water level)
+1643500,bennett,63,0.04,Bennett Cr at Park Mills
+1591000,unity,35,0.04,Patuxent River near Unity
+1591400,cattail,23,0.04,Cattail Cr near Glenwood
+1591700,hawlings,27,0.04,Hawlings River near Sandy Spring
+1656000,cedar,93,0.04,Cedar Run near Catlett

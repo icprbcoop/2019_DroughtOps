@@ -2,8 +2,8 @@ output$demands <- renderPlot({
   
   # plot total FW demand
   demands.plot.df <- demands.daily.df %>%
-    mutate(p_fw = d_fw_e + d_fw_w) %>%
-    select(date_time, p_fw, d_wssc, d_wa, d_lw)
+    mutate(d_fw_pot = d_fw_w, d_wssc_pot = d_wssc) %>%
+    select(date_time, d_fw_pot, d_wssc_pot, d_wa, d_lw)
   
   # gather the data into long format; use the dynamic plot ranges
   demands.df <- gather(demands.plot.df, key = "location", 

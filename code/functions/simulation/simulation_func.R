@@ -78,7 +78,7 @@ simulation_func <- function(date_sim0,
   # This time series df has a length = 15, from today to 14 days hence
   # It is a placeholder for all the supplier total demand fcs
   # The demands.daily.df columns are: date_time, d_fw_e, d_fw_w, d_fw_c,
-  #                  d_lw, d_wa, d_wssc, d_total
+  #                  d_lw, d_wa, d_wssc, d_pot_total, d_total
   #-----------------------------------------------------------------------------
   # Grab demand fcs for today (and tomorrow, and 9 days hence)
   # print(paste("in simulation_func, date_sim is ", date_sim0))

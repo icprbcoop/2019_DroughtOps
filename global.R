@@ -39,9 +39,10 @@ source("code/functions/display/va_drought_map_func.R", local = TRUE)
 
 #-----define paths, define parameters, and import data ----------------------
 source("config/paths.R", local = TRUE)
-source("input/parameters/parameters.R", local = TRUE)
+source("input/parameters/parameters_ops.R", local = TRUE)
 source("code/global/import_data.R", local = TRUE)#
 source("input/parameters/css_ui_values.R", local = TRUE)
+source("code/global/complete_daily_flows.R", local = TRUE)
 #----------------------------------------------------------------------------
 
 # Read classes and functions --------------------------------------------------
@@ -62,7 +63,7 @@ source("code/functions/simulation/rule_curve_func.R", local = TRUE)
 source("code/functions/simulation/nbr_rule_curve_func.R", local = TRUE)
 source("code/functions/display/display_graph_res_func.R", local = TRUE)
 
-# Functions added by Luke -----------------------------------------------------
+# Functions added by LukeV ----------------------------------------------------
 source("code/functions/display/date_func.R", local = TRUE)
 source("code/functions/display/warning_color_func.R", local = TRUE)
 # this is a lazy Friday fix that should be changed later:
@@ -107,12 +108,4 @@ source("code/server/state_status_ts_init.R", local = TRUE)
 #    - 1 = Watch
 #    - 0 = Warning
 #    - 0 = Emergency
-
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-# A few needed inputs which will probably be moved at some point
-#------------------------------------------------------------------------------
-#------------------------------------------------------------------------------
-
-
 

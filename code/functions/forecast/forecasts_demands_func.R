@@ -8,8 +8,9 @@
 # Inputs
 #******************************************************************
 # date_sim - the current date in the simulation
-# demands.df - a df containing the demand time series, with
-#   d_total - total wma demands
+# demands.daily.df - a df containing the demand time series, with
+#   d_pot_total - total wma potomac demands
+#   ? which does simulation need??? above or d_total - total wma demands
 #   d_fw_e - Fairfax Water eastern service area demand (no LW)
 #   d_fw_w - Fairfax Water western service area demand (no LW)
 #   d_fw_c - Fairfax Water central service area demand (no LW)
@@ -39,7 +40,7 @@ forecasts_demands_func <- function(date_sim000,
                   d_lw = d_lw*d_factor,
                   d_wssc = d_wssc*d_factor,
                   d_wa = d_wa*d_factor,
-                  d_total = d_total*d_factor) %>%
+                  d_pot_total = d_pot_total*d_factor) %>%
     dplyr::select(date_time, d_fw_e, d_fw_w, d_fw_c, d_lw,
                   d_wa, d_wssc)
   return(demands.fc.df)

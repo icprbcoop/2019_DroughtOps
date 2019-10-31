@@ -9,7 +9,7 @@ output$por_flow <- renderValueBox({
   por_threshold <- 2000 # (cfs) CO-OP's trigger for daily monitoring/reporting
   potomac.ts.df <- ts$flows
   por_mgd <- last(potomac.ts.df$por_nat)
-  por_flow <- paste("Flow at Point of Rocks = ",
+  por_flow <- paste("Flow at Point of Rocks yesterday = ",
                     round(por_mgd*mgd_to_cfs), " cfs",
                     " (", round(por_mgd), " MGD)", sep = "")
   valueBox(
@@ -26,7 +26,7 @@ output$por_flow <- renderValueBox({
 output$lfalls_obs <- renderValueBox({
   potomac.ts.df <- ts$flows
   lfalls_mgd <- last(potomac.ts.df$lfalls_obs) 
-  lfalls_obs <- paste("Flow at Little Falls = ",
+  lfalls_obs <- paste("Flow at Little Falls yesterday = ",
                       round(lfalls_mgd*mgd_to_cfs),
                       " cfs (", round(lfalls_mgd),
                       " MGD)", sep = "")

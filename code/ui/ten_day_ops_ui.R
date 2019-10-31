@@ -1,10 +1,12 @@
-# tabPanel("Ten Day",
-#          fluidRow(
-#            align = "center",
-#            plotOutput("ten_day_plot", height = plot.height, width = plot.width),
-#            br()
-#          ) # End fluidRow
-# ) # end of tab panel
+# *****************************************************************************
+# DESCRIPTION
+# *****************************************************************************
+# Displays graphs and values displayed for 10-day ops tab
+# *****************************************************************************
+# INPUTS
+# *****************************************************************************
+# Created in ten_day_ops_server.R
+# *****************************************************************************
 
 tabPanel("10-Day Ops",
          fluidRow( # major row that contains whole body
@@ -29,7 +31,7 @@ tabPanel("10-Day Ops",
                    box(
                      title = "North Branch flows",
                      width = NULL,
-                     plotOutput("nbr_ten_day_plot", height = "190px")
+                     plotOutput("nbr_ten_day_plot", height = "220px")
                    )
                  )
                ) # end of 2nd fluid row
@@ -38,7 +40,9 @@ tabPanel("10-Day Ops",
                width = 6,
                valueBoxOutput("lfalls_empirical_9day_fc", width = NULL),
                valueBoxOutput("wma_withdr_9day_fc", width = NULL),
-               valueBoxOutput("luke", width = NULL)
+               valueBoxOutput("luke", width = NULL),
+               valueBoxOutput("deficit", width = NULL),
+               valueBoxOutput("luke_target", width = NULL)
                # valueBoxOutput("lfalls_obs", width = NULL)
              ) # end of 2nd main column
            ) # end of major column that contains whole body
