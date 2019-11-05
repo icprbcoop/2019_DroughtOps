@@ -24,9 +24,9 @@
 
 #-----Load packages  
 #-----use this one when not publishing to shinyapp.io, comment out when publishing:
-#source("code/global/load_packages.R", local = TRUE)
+source("code/global/load_packages.R", local = TRUE)
 #-----use this one when publishing, can comment out otherwise:
-source("code/global/import_packages.R", local = TRUE)
+# source("code/global/import_packages.R", local = TRUE)
 #----------------------------------------------------------------------
 
 #this is the date today.  it is the one and only.  use this

@@ -69,9 +69,35 @@ flows.last3days.df <- flows.last3days.df %>%
   arrange(seneca)
 date_min_seneca <- flows.last3days.df$date_time[1]
 
+
 flows.last3days.df <- flows.last3days.df %>%
   arrange(goose)
 date_min_goose <- flows.last3days.df$date_time[1]
+
+# Need to extend flows used to estimate reservoir inflows ---------------------
+flows.last3days.df <- flows.last3days.df %>%
+  arrange(kitzmiller)
+date_min_kitzmiller <- flows.last3days.df$date_time[1]
+
+flows.last3days.df <- flows.last3days.df %>%
+  arrange(bennett)
+date_min_bennett <- flows.last3days.df$date_time[1]
+
+flows.last3days.df <- flows.last3days.df %>%
+  arrange(cedar)
+date_min_cedar <- flows.last3days.df$date_time[1]
+
+flows.last3days.df <- flows.last3days.df %>%
+  arrange(unity)
+date_min_unity <- flows.last3days.df$date_time[1]
+
+flows.last3days.df <- flows.last3days.df %>%
+  arrange(cattail)
+date_min_cattail <- flows.last3days.df$date_time[1]
+
+flows.last3days.df <- flows.last3days.df %>%
+  arrange(hawlings)
+date_min_hawlings <- flows.last3days.df$date_time[1]
 
 # Compute recession flows for future dates ------------------------------------
 flows.daily.mgd.df <- flows.daily.mgd.df %>%
@@ -102,6 +128,48 @@ flows.daily.mgd.df <- flows.daily.mgd.df %>%
     date_time <= date_today0 ~ monoc_jug,
     date_time > date_today0 ~ recess_mins$monoc_jug
     *exp(-0.04*as.numeric((date_time - date_min_monoc_jug))),
+    TRUE ~ -9999.9)) %>%
+  
+  # recess Kitzmiller
+  dplyr::mutate(kitzmiller = case_when(
+    date_time <= date_today0 ~ kitzmiller,
+    date_time > date_today0 ~ recess_mins$kitzmiller
+    *exp(-0.04*as.numeric((date_time - date_min_kitzmiller))),
+    TRUE ~ -9999.9)) %>%
+  
+  # recess Bennett
+  dplyr::mutate(bennett = case_when(
+    date_time <= date_today0 ~ bennett,
+    date_time > date_today0 ~ recess_mins$bennett
+    *exp(-0.04*as.numeric((date_time - date_min_bennett))),
+    TRUE ~ -9999.9)) %>%
+  
+  # recess Cedar
+  dplyr::mutate(cedar = case_when(
+    date_time <= date_today0 ~ cedar,
+    date_time > date_today0 ~ recess_mins$cedar
+    *exp(-0.04*as.numeric((date_time - date_min_cedar))),
+    TRUE ~ -9999.9)) %>%
+  
+  # recess Unity
+  dplyr::mutate(unity = case_when(
+    date_time <= date_today0 ~ unity,
+    date_time > date_today0 ~ recess_mins$unity
+    *exp(-0.04*as.numeric((date_time - date_min_unity))),
+    TRUE ~ -9999.9)) %>%
+  
+  # recess Cattail
+  dplyr::mutate(cattail = case_when(
+    date_time <= date_today0 ~ cattail,
+    date_time > date_today0 ~ recess_mins$cattail
+    *exp(-0.04*as.numeric((date_time - date_min_cattail))),
+    TRUE ~ -9999.9)) %>%
+  
+  # recess Hawlings
+  dplyr::mutate(hawlings = case_when(
+    date_time <= date_today0 ~ hawlings,
+    date_time > date_today0 ~ recess_mins$hawlings
+    *exp(-0.04*as.numeric((date_time - date_min_hawlings))),
     TRUE ~ -9999.9)) %>%
   
   # recess L Falls itself - just to improve look of graph
