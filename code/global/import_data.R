@@ -61,13 +61,28 @@ flows.daily.cfs.df <- data.table::fread(
   select(-date) %>%
   select(date_time, everything())
 
+# Read hourly flow data --------------------------------------------------------
+#   - for hourly data use as.POSIXct
+flows.hourly.cfs.df <- data.table::fread(
+  paste(ts_path, "flows_hourly_cfs.csv", sep = ""),
+  header = TRUE,
+  stringsAsFactors = FALSE,
+  colClasses = c("character", rep("numeric", 31)), # force cols 2-32 numeric
+  col.names = list_gage_locations,
+  na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", -999999),
+  data.table = FALSE) %>%
+  # mutate(date_time = date)
+  dplyr::mutate(date_time = as.POSIXct(date)) %>%
+  select(-date) %>%
+  select(date_time, everything())
+
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Import a time series of recent WMA system withdrawals and withdr forecasts
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-# Read hourly data --------------------------------------------------------
+# Read hourly withdrawal data -------------------------------------------------
 withdr.hourly.df <- data.table::fread(
   paste(ts_path, "coop_pot_withdrawals.csv", sep = ""),
   skip = 10,

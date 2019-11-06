@@ -12,11 +12,11 @@ shinyServer(function(input, output, session) {
   source("code/server/situational_awareness/4th_output2.R", local=TRUE)
   source("code/server/situational_awareness/5th_output3.R", local=TRUE)
   
-  #one day tab
+  #one day ops tab
+  source("code/server/one_day_ops/one_day_ops_server.R", local=TRUE)
   
-  #ten day tab
-  
-  source("code/server/ten_day_ops_server.R", local=TRUE)
+  #ten day ops tab
+  source("code/server/ten_day_ops/ten_day_ops_server.R", local=TRUE)
   
   #long term tab
   

@@ -22,8 +22,8 @@ dashboardPage(skin = "blue",
     width = 250,
     dateRangeInput("plot_range",
                "Specify plot range",
-               start = date_start,
-#               start = "2019-05-01",
+               # start = date_start,
+              start = "2019-10-01",
 #               end = "1930-12-31",
                # start = date_start,
                end = date_end,
@@ -111,10 +111,11 @@ actionButton("write_ts",
 
     
       source("code/ui/situational_awareness.R", local = TRUE)$value,
-      source("code/ui/one_day_operations.R", local = TRUE)$value,
+      source("code/ui/one_day_ops_ui.R", local = TRUE)$value,
       source("code/ui/ten_day_ops_ui.R", local = TRUE)$value,
       source("code/ui/long_term_operations.R", local = TRUE)$value,
-      source("code/ui/demands.R", local = TRUE)$value
+      source("code/ui/demands.R", local = TRUE)$value,
+      source("code/ui/simulation_ui.R", local = TRUE)$value
       
       )
       

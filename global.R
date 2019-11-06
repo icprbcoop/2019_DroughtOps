@@ -40,6 +40,7 @@ source("code/functions/display/va_drought_map_func.R", local = TRUE)
 #-----define paths, define parameters, and import data ----------------------
 source("config/paths.R", local = TRUE)
 source("input/parameters/parameters_ops.R", local = TRUE)
+source("input/parameters/parameters_physical.R", local = TRUE)
 source("code/global/import_data.R", local = TRUE)#
 source("input/parameters/css_ui_values.R", local = TRUE)
 source("code/global/complete_daily_flows.R", local = TRUE)
