@@ -40,13 +40,13 @@ output$jrrStorageReleases <- renderPlot({
   graph_title <- "Jennings Randolph"
   jrr.graph <- ts$jrr %>%
     select(Date = date_time,
-           "WS stor" = storage_ws, 
+           "WS stor" = storage_ws,
            "WQ stor" = storage_wq
            ,
-           "WS rel" = outflow_ws, 
+           "WS rel" = outflow_ws,
            "WQ rel" = outflow_wq
     ) %>%
-    gather(key = "Legend", 
+    gather(key = "Legend",
            value = "MG", -Date) %>%
     filter(Date >= input$plot_range[1],
            Date <= input$plot_range[2])
@@ -61,7 +61,7 @@ output$jrrStorageReleases <- renderPlot({
     # face = "bold")) +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_blank()) +
-    theme(legend.position = "right", 
+    theme(legend.position = "right",
           legend.title = element_blank())
 }) # end jrr renderPlot testing
 #

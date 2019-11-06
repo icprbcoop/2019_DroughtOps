@@ -3,24 +3,27 @@
 # then produces output
 #******************************************************************
 shinyServer(function(input, output, session) {
-  # multi-use
+  # Multi-use
   source("code/server/dates_server.R", local = TRUE)
-    #situational awareness tab
-  source("code/server/situational_awareness/1st_sim.R", local=TRUE)
-  source("code/server/situational_awareness/2nd_plot.R", local=TRUE)
-  source("code/server/situational_awareness/3rd_output1.R", local=TRUE)
-  source("code/server/situational_awareness/4th_output2.R", local=TRUE)
-  source("code/server/situational_awareness/5th_output3.R", local=TRUE)
   
-  #one day ops tab
+  # Situational awareness tab
+  source("code/server/situational_awareness/sit_aware_plots.R", local=TRUE)
+  source("code/server/situational_awareness/sit_aware_valueboxes.R", local=TRUE)
+  source("code/server/situational_awareness/sit_aware_MD.R", local=TRUE)
+  source("code/server/situational_awareness/sit_aware_VA.R", local=TRUE)
+  
+  # One day ops tab
   source("code/server/one_day_ops/one_day_ops_server.R", local=TRUE)
   
-  #ten day ops tab
+  # Ten day ops tab
   source("code/server/ten_day_ops/ten_day_ops_server.R", local=TRUE)
   
-  #long term tab
-  
+  # Long term tab
   source("code/server/demands/demands_server.R", local=TRUE)
+  
+  # Simulation tab
+  source("code/server/simulation/sim_run.R", local=TRUE)  
+  source("code/server/simulation/sim_plots.R", local=TRUE)
   
   }) # end shinyServer
 

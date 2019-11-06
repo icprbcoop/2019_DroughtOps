@@ -8,9 +8,9 @@ tabPanel("Simulation",
         width = 6,
         fluidRow( # row with Potomac flow graph
           box(
-            title = "testing",
-            width = NULL
-            # plotOutput("potomacFlows", height = "220px")
+            title = NULL,
+            width = NULL,
+            plotOutput("potomacFlows", height = "220px")
           )
         ),
         
@@ -20,16 +20,16 @@ tabPanel("Simulation",
             width = 6,
             box(
               title = NULL,
-              width = NULL
-              # plotOutput("jrrStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("jrrStorageReleases", height = "190px")
             )
           ),
           column(
             width = 6,
             box(
               title = NULL,
-              width = NULL
-              # plotOutput("occStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("occStorageReleases", height = "190px")
             )
           )
         ), # end row with jrr and occ graphs
@@ -40,16 +40,16 @@ tabPanel("Simulation",
             box(
               #                    title = "Little Seneca storage",
               title = NULL,
-              width = NULL
-              # plotOutput("senStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("senStorageReleases", height = "190px")
             )
           ),
           column(
             width = 6,
             box(
               title = NULL,
-              width = NULL
-              # plotOutput("patStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("patStorageReleases", height = "190px")
             )
           )
         ) # end row with sen and pat graphs 
