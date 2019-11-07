@@ -8,9 +8,15 @@
 # *****************************************************************************
 # gages.csv - file listing USGS stream gages we use
 # flows_daily_cfs.csv - current daily streamflow data
+#   - code set up so that these time series begin on Jan 1 of current year
 #   - daily data can be downloaded from CO-OP's Data Portal
 #   - link is https://icprbcoop.org/drupal4/icprb/flow-data
 #   - name appropriately then save the file to /input/ts/current/
+# flows_hourly_cfs.csv - current hourly streamflow data
+#   - hourly data can be downloaded from CO-OP's Data Portal
+#   - link is https://icprbcoop.org/drupal4/icprb/flow-data
+#   - grab last few days of data and paste into existing file (or memory error!)
+#   - file is in /input/ts/current/
 # coop_pot_withdrawals.csv - WMA supplier hourly withdrawal data
 #   - daily data can be downloaded from CO-OP's Data Portal
 #   - link is https://icprbcoop.org/drupal4/products/coop_pot_withdrawals.csv
