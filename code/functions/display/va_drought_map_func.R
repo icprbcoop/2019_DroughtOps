@@ -1,6 +1,6 @@
 va_drought_map_func <- function(){
   #this is the url that contains all the map files
-  map_url_head ='https://deq1.bse.vt.edu/drought/state/images/maps/'
+  map_url_head ='http://deq1.bse.vt.edu/drought/state/images/maps/'
   
   #creates an object to open 
   test <- curl::curl(map_url_head)
