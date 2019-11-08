@@ -17,7 +17,7 @@ tabPanel("Download Data",
                actionButton("accept_data_w",
                             "Accept and save the data",
                             icon = NULL,
-                            width = "220px"),
+                            width = "220px")
              ), #this is the end of the 1st main column
              
              column( # this is the 2nd main column - with the plotted data
@@ -47,7 +47,7 @@ tabPanel("Download Data",
                actionButton("accept_data_fd",
                             "Accept and save data",
                             icon = NULL,
-                            width = "220px"),
+                            width = "220px")
              ), #this is the end of the 3rd main column
              
              column( # this is the 4th main column - with the plotted data
@@ -60,7 +60,7 @@ tabPanel("Download Data",
                    plotOutput("flows_daily_plot", height = plot.height, width = plot.width)
                    
                  ) # box end
-               ), # this is the end of row with flows daily data
+               ) # this is the end of row with flows daily data
              ), # this is the end of 4th main column
              
              column(  # this is the 5th main column - with the buttons
@@ -77,7 +77,7 @@ tabPanel("Download Data",
                actionButton("accept_data_fh",
                             "Accept and save the data",
                             icon = NULL,
-                            width = "220px"),
+                            width = "220px")
              ), #this is the end of the 5th main column
                
              column( # this is the 6th main column - with the plotted data
@@ -91,7 +91,7 @@ tabPanel("Download Data",
                  ) # box end
                ) # this is the end of row with flows hourly data
                
-             ) # this is the end of 2nd main column
+             ) # this is the end of 6th main column
              
              
            ) # end of major column that contains whole body

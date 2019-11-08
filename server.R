@@ -24,6 +24,9 @@ shinyServer(function(input, output, session) {
   # Simulation tab
   source("code/server/simulation/sim_run.R", local=TRUE)  
   source("code/server/simulation/sim_plots.R", local=TRUE)
+
+  #Data Download tab
+  source("code/server/download_data/download_data_server.R", local=TRUE)
   
   }) # end shinyServer
 
