@@ -11,7 +11,7 @@ observeEvent(input$download_data_w, {
   # demands.df$DateTime <- as_datetime(as.character(demands.df$DateTime))
   
   #write dataframe to file
-  write.csv(demands.df, paste(ts_path, "download_w_data_temp.csv"))
+  write.csv(demands.df, paste(ts_path, "download_data_w_temp.csv"))
 })
 
 observeEvent(input$view_data_w, {
@@ -54,9 +54,9 @@ observeEvent(input$download_data_fd, {
   daily_start = paste0(format(first_of_year,"%m"),"%2F",format(first_of_year,"%d"), "%2F",format(first_of_year,"20%y"))
   print(daily_start)
   
-  daily_end = paste0(format(dat,"%m"),"%2F",format(date_today0,"%d"), "%2F",format(date_today0,"20%y"))
+  daily_end = paste0(format(date_today0,"%m"),"%2F",format(date_today0,"%d"), "%2F",format(date_today0,"20%y"))
   
-  full_daily_url = paste0("https://icprbcoop.org/drupal4/icprb/flow-data?","startdate=", daily_start,"&enddate=" ,daily_end, "&format=daily&submit=Submit")
+  full_daily_url = paste0("http://icprbcoop.org/drupal4/icprb/flow-data?","startdate=", daily_start,"&enddate=" ,daily_end, "&format=daily&submit=Submit")
   
   print(full_daily_url)
   
@@ -115,7 +115,9 @@ observeEvent(input$download_data_fh, {
   
   hourly_end = paste0(format(date_today0,"%m"),"%2F",format(date_today0,"%d"), "%2F",format(date_today0,"20%y"))
   
-  full_hourly_url = paste0("https://icprbcoop.org/drupal4/icprb/flow-data?","startdate=", hourly_start,"&enddate=" ,hourly_end, "&format=hourly&submit=Submit")
+  full_hourly_url = paste0("http://icprbcoop.org/drupal4/icprb/flow-data?","startdate=", hourly_start,"&enddate=" ,hourly_end, "&format=hourly&submit=Submit")
+  
+  #http://icprbcoop.org/drupal4/icprb/flow-data?startdate=11%2f3%2f2019&enddate=11%2f8%2f2019&format=hourly&submit=Submit
   
   #import the hourly flows data from sarah's site
   demands_raw.df <- data.table::fread(full_hourly_url,
