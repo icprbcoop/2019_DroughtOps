@@ -120,7 +120,7 @@ output$lfalls_fc1 <- renderValueBox({
 # Little Falls 1-day deficit - constant lags ----------------------------------
 lfalls_1day_deficit1_mgd <- estimate_need_func(
   lfalls_flow = lfalls_1day_fc1_mgd,
-  mos = 120
+  mos = mos_1day0
 )
 lfalls_1day_deficit1_cfs <- round(lfalls_1day_deficit1_mgd*mgd_to_cfs, 0)
 

@@ -160,6 +160,31 @@ demands.daily.df <- demands.daily.df %>%
   dplyr::arrange(date_time) %>%
   dplyr::mutate(date_time = round_date(date_time, unit = "days"))
 
+# Read LFFS LFalls hourly data ------------------------------------------------
+lffs.hourly.cfs.df <- data.table::fread(
+  paste(ts_path, "PM7_4820_0001.txt", sep = ""),
+  skip = 25,
+  header = FALSE,
+  stringsAsFactors = FALSE,
+  colClasses = c(rep("numeric", 6)), # force cols to numeric
+  col.names = c("year", "month", "day", "minute", "second", "lffs_lfalls"),
+  # na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", "NA", -999999),
+  data.table = FALSE) %>%
+  filter(year >= current_year) %>%
+  dplyr::mutate(date_time = 
+                  lubridate::make_datetime(year, month, 
+                                           day, minute, second),
+                date = lubridate:: round_date(date_time, unit = "days")) %>%
+  select(date_time, date, lffs_lfalls)
+
+# Compute LFFS LFalls daily flows ---------------------------------------------
+lffs.daily.cfs.df <- lffs.hourly.cfs.df %>%
+  select(-date_time) %>%
+  group_by(date) %>%
+  summarise(lffs_lfalls = mean(lffs_lfalls)) %>%
+  mutate(date_time = as.Date(date)) %>%
+  ungroup()
+
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Import time series representing state drought status.

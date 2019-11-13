@@ -28,6 +28,16 @@ source("code/global/load_packages.R", local = TRUE)
 # Use this one when publishing, can comment out otherwise:
 # source("code/global/import_packages.R", local = TRUE)
 
+# Set paths -------------------------------------------------------------------
+
+ts_path <- "input/ts/current/" # use for actual operations
+# ts_path <- "input/ts/2019_drex/" 
+
+# Other paths -----------------------------------------------------------------
+parameters_path <- "input/parameters/"
+ts_output <- "output/" # path of output directory
+map_path <- "data/Drought_Regions" #MD shapefiles
+
 # Set "today's" date ----------------------------------------------------------
 #    - Right now this needs to match last date in flows_daily_cfs.csv
 date_today0 <- as.Date(today())
@@ -38,8 +48,8 @@ source("code/functions/display/md_drought_map_func.R", local = TRUE)
 source("code/functions/display/va_drought_map_func.R", local = TRUE)
 #------------------------------------------------------------------------------
 
-#-----define paths, define parameters, and import data ----------------------
-source("config/paths.R", local = TRUE)
+#-----define parameters and import data ----------------------
+# source("config/paths.R", local = TRUE)
 source("input/parameters/parameters_ops.R", local = TRUE)
 source("input/parameters/parameters_physical.R", local = TRUE)
 source("code/global/import_data.R", local = TRUE)#
