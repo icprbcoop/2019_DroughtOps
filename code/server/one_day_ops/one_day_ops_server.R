@@ -52,7 +52,8 @@ ops_1day.df <- flows.hourly.mgd.df %>%
   select(date_time, lfalls, seneca, goose, monoc_jug, por)
 
 # Fill in missing data --------------------------------------------------------
-#   - delete last row to avoid missing data which messes up na.approx
+#   - delete last row to avoid last hour having missing data 
+#   - which messes up na.approx
 ops_1day.df <- head(ops_1day.df, -1)
 ops_1day.df$lfalls <- na.approx(ops_1day.df$lfalls)
 ops_1day.df$seneca <- na.approx(ops_1day.df$seneca)

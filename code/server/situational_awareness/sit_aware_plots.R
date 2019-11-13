@@ -40,7 +40,7 @@ sit_aware_mgd.df <- flows.daily.mgd.df %>%
 flows.plot.df <- sit_aware_mgd.df %>%
   gather(key = "site", value = "flow", -date_time)
 
-output$flows_plot <- renderPlot({
+output$sit_aware_flows_plot <- renderPlot({
   flows.plot.df <- flows.plot.df %>%  
   filter(date_time >= input$plot_range[1],
          date_time <= input$plot_range[2])
@@ -54,4 +54,112 @@ output$flows_plot <- renderPlot({
                                      "solid", "solid",
                                      "dotted","solid","solid"))
 })
+
+#------------------------------------------------------------------
+# Create graph of storage and releases for each reservoir
+#------------------------------------------------------------------
+output$sit_aware_jrr_stor <- renderPlot({
+  graph_title <- "Jennings Randolph"
+  jrr.graph <- ts$jrr %>%
+    select(Date = date_time,
+           "WS stor" = storage_ws,
+           "WQ stor" = storage_wq
+           ,
+           "WS rel" = outflow_ws,
+           "WQ rel" = outflow_wq
+    ) %>%
+    gather(key = "Legend",
+           value = "MG", -Date) %>%
+    filter(Date >= input$plot_range[1],
+           Date <= input$plot_range[2])
+  ggplot(data = jrr.graph,
+         aes(x = Date, y = MG, group = Legend)) +
+    geom_line(aes(color = Legend, size = Legend)) +
+    scale_color_manual(values = c("lightgreen", "green",
+                                  "lightblue", "blue")) +
+    scale_size_manual(values = c(0.5, 1, 0.5, 1)) +
+    ggtitle(graph_title) +
+    theme(plot.title = element_text(size = 18)) +
+    # face = "bold")) +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    theme(legend.position = "right",
+          legend.title = element_blank())
+}) # end jrr renderPlot testing
+#
+#------------------------------------------------------------------
+# I can't get the following graphing function to work:
+# output$senStorageReleases <- renderPlot({
+#   sen.graph <- ts$sen
+#   graph_title <- "Seneca"
+#   display_graph_res_func(graph_title, sen.graph)
+# })
+output$sit_aware_sen_stor <- renderPlot({
+  sen.graph <- ts$sen
+  graph_title <- "Little Seneca"
+  res.graph <- sen.graph %>%
+    select(date_time, storage, outflow) %>%
+    gather(key = "Legend",
+           value = "MG", -date_time) %>%
+    filter(date_time >= input$plot_range[1],
+           date_time <= input$plot_range[2])
+  ggplot(data = res.graph,
+         aes(x = date_time, y = MG, group = Legend)) +
+    geom_line(aes(color = Legend, size = Legend)) +
+    scale_color_manual(values = c("lightblue",
+                                  "blue")) +
+    scale_size_manual(values = c(0.5, 1)) +
+    ggtitle(graph_title) +
+    theme(plot.title = element_text(size = 18)) +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    theme(legend.position = "none")
+}) # end sen renderPlot
+#
+#------------------------------------------------------------------
+output$sit_aware_pat_stor <- renderPlot({
+  pat.graph <- ts$pat
+  graph_title <- "Patuxent"
+  res.graph <- pat.graph %>%
+    select(date_time, storage, outflow) %>%
+    gather(key = "Legend",
+           value = "MG", -date_time) %>%
+    filter(date_time >= input$plot_range[1],
+           date_time <= input$plot_range[2])
+  ggplot(data = res.graph,
+         aes(x = date_time, y = MG, group = Legend)) +
+    geom_line(aes(color = Legend, size = Legend)) +
+    scale_color_manual(values = c("lightblue",
+                                  "blue")) +
+    scale_size_manual(values = c(0.5, 1)) +
+    ggtitle(graph_title) +
+    theme(plot.title = element_text(size = 18)) +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    theme(legend.position = "none")
+}) # end pat renderPlot
+#
+#------------------------------------------------------------------
+output$sit_aware_occ_stor <- renderPlot({
+  occ.graph <- ts$occ
+  graph_title <- "Occoquan"
+  res.graph <- occ.graph %>%
+    select(date_time, storage, outflow) %>%
+    gather(key = "Legend",
+           value = "MG", -date_time) %>%
+    filter(date_time >= input$plot_range[1],
+           date_time <= input$plot_range[2])
+  ggplot(data = res.graph,
+         aes(x = date_time, y = MG, group = Legend)) +
+    geom_line(aes(color = Legend, size = Legend)) +
+    scale_color_manual(values = c("lightblue",
+                                  "blue")) +
+    scale_size_manual(values = c(0.5, 1)) +
+    ggtitle(graph_title) +
+    theme(plot.title = element_text(size = 18)) +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    theme(legend.position = "none")
+}) # end occ renderPlot
+
   

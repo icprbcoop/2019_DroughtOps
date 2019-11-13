@@ -18,7 +18,8 @@
 # ts_path <- "input/ts/2038_1998_p532_i_a1b/"
 
 # Path for current operations
-ts_path <- "input/ts/current/" 
+# ts_path <- "input/ts/current/" 
+ts_path <- "input/ts/2019_drex/" 
 
 # Other paths -----------------------------------------------------------------
 parameters_path <- "input/parameters/"

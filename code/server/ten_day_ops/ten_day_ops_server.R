@@ -97,7 +97,7 @@ output$ten_day_plot <- renderPlot({
     scale_size_manual(values = c(1, 2, 1, 1, 1, 1)) +
     # shape=1 is open circle, stroke is border width
     geom_point(data = lfalls_10day.plot2.df, aes(x = date_time, y = flow),
-               size = 5, colour = "blue", shape = 1, stroke = 1.5)
+               size = 5, colour = "deepskyblue3", shape = 1, stroke = 1.0)
 
 })
   
@@ -174,7 +174,7 @@ output$luke <- renderValueBox({
   )
 })
 
-# Display deficit in nine days time
+# Display deficit in nine days time -------------------------------------------
 deficit_mgd <- round(lfalls_flowby - lfalls_9day_fc_mgd, 0)
 deficit_cfs <- round(deficit_mgd*mgd_to_cfs)
 output$deficit <- renderValueBox({
@@ -191,7 +191,7 @@ output$deficit <- renderValueBox({
   )
 })
 
-# Display today's Luke target
+# Display today's Luke target -------------------------------------------------
 luke_extra <- if_else(deficit_mgd <= 0, 0, deficit_mgd)
 luke_target_mgd <- round(luke_mgd + luke_extra, 0)
 luke_target_cfs <- round(luke_target_mgd*mgd_to_cfs, 0)

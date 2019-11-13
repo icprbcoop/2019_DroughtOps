@@ -10,7 +10,7 @@ tabPanel("Situational Awareness",
           box(
             title = NULL,
             width = NULL,
-            plotOutput("flows_plot", height = "400px")
+            plotOutput("sit_aware_flows_plot", height = "400px")
           )
         ),
         fluidRow( # row with 2 reservoir graphs
@@ -19,35 +19,34 @@ tabPanel("Situational Awareness",
             width = 6,
             box(
               title = NULL,
-              width = NULL
-              # plotOutput("jrrStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("sit_aware_jrr_stor", height = "190px")
             )
           ),
           column(
             width = 6,
             box(
               title = NULL,
-              width = NULL
-              # plotOutput("occStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("sit_aware_sen_stor", height = "190px")
             )
           )
-        ), # end row with jrr and occ graphs
+        ), # end row with jrr and sen graphs
         fluidRow(
           column(
             width = 6,
             box(
-              #                    title = "Little Seneca storage",
               title = NULL,
-              width = NULL
-              # plotOutput("senStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("sit_aware_occ_stor", height = "190px")
             )
           ),
           column(
             width = 6,
             box(
               title = NULL,
-              width = NULL
-              # plotOutput("patStorageReleases", height = "190px")
+              width = NULL,
+              plotOutput("sit_aware_pat_stor", height = "190px")
             )
           )
         ) # end row with sen and pat graphs 
@@ -55,8 +54,8 @@ tabPanel("Situational Awareness",
       ), # end of 1st main column - with graphs
       column( # this is the 2nd main column - with values & triggers
         width = 6,
-        valueBoxOutput("por_flow", width = NULL),
         valueBoxOutput("lfalls_obs", width = NULL),
+        valueBoxOutput("por_flow", width = NULL),
         # infoBoxOutput("coop_ops", width = NULL),
         # infoBoxOutput("lfaa_alert", width = NULL),
         # infoBoxOutput("mwcog_stage", width = NULL),

@@ -60,8 +60,8 @@ flows.daily.cfs.df <- data.table::fread(
   header = TRUE,
   stringsAsFactors = FALSE,
   colClasses = c("character", rep("numeric", 31)), # force cols 2-32 numeric
-  col.names = list_gage_locations,
-  na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", -999999),
+  col.names = list_gage_locations, # 1st column is "date"
+  na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", "NA", -999999),
   data.table = FALSE) %>%
   dplyr::mutate(date_time = as.Date(date)) %>%
   select(-date) %>%
@@ -74,8 +74,8 @@ flows.hourly.cfs.df <- data.table::fread(
   header = TRUE,
   stringsAsFactors = FALSE,
   colClasses = c("character", rep("numeric", 31)), # force cols 2-32 numeric
-  col.names = list_gage_locations,
-  na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", -999999),
+  col.names = list_gage_locations, # 1st column is "date"
+  na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", "NA", -999999),
   data.table = FALSE) %>%
   # mutate(date_time = date)
   dplyr::mutate(date_time = as.POSIXct(date)) %>%

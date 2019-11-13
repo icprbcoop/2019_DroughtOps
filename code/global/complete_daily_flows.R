@@ -69,7 +69,6 @@ flows.last3days.df <- flows.last3days.df %>%
   arrange(seneca)
 date_min_seneca <- flows.last3days.df$date_time[1]
 
-
 flows.last3days.df <- flows.last3days.df %>%
   arrange(goose)
 date_min_goose <- flows.last3days.df$date_time[1]
