@@ -83,26 +83,34 @@ tabPanel("Situational Awareness",
         
         #these two boxes are for outputting the Maryland drought map 
         #and Virginia drought squares
+        
+        #----------------------beginning of Maryland section-----------------------------------
         box(
           title = NULL,#"MARYLAND DROUGHT STATUS",
           width = NULL,#6,
           height = 220,
           htmlOutput(outputId="MD_title"),
+          
           box(
             tags$img(alt="Drought Status Map:2019-05-31",
                      src= md_drought_map,
                      style="width:250px;height:150px;border:0;")
             #leafletOutput("mymap", height =140, width =300)
           ),
-          box(
-            htmlOutput(outputId = "boxes")
-          )
+          # box(
+          #   htmlOutput(outputId = "boxes")
+          # )
         ),
         #tags$p("Western region: Drought Watch; Central region: Drought Warning")),
+        #-------------------------end of Maryland section---------------------------------------
+        
+        
+        #------------------------beginning of Virginia section----------------------------------
         box(
           title = NULL,#"VIRGINIA DROUGHT STATUS",
           width = NULL,#6,
           height = 220,
+          htmlOutput(outputId="VA_title"),
           
           box(
             tags$img(alt="Drought Status Map:2019-05-31",
@@ -111,7 +119,7 @@ tabPanel("Situational Awareness",
           ),
           
           
-          htmlOutput(outputId = "boxes2")
+          # htmlOutput(outputId = "boxes2")
         )
         #"NoVa: Drought Watch; Shenandoah: Drought Emergency")
       ) # end of 2nd main column
