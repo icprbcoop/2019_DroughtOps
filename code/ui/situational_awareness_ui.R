@@ -96,7 +96,7 @@ tabPanel("Situational Awareness",
                      src= md_drought_map,
                      style="width:250px;height:150px;border:0;")
             #leafletOutput("mymap", height =140, width =300)
-          ),
+          )
           # box(
           #   htmlOutput(outputId = "boxes")
           # )
@@ -116,7 +116,7 @@ tabPanel("Situational Awareness",
             tags$img(alt="Drought Status Map:2019-05-31",
                      src= va_drought_map,#"https://deq1.bse.vt.edu/drought/state/images/maps/imageMapFile15627929031512.png",
                      style="width:200px;height:150px;border:0;")
-          ),
+          )
           
           
           # htmlOutput(outputId = "boxes2")
