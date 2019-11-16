@@ -52,16 +52,13 @@ tabPanel("Situational Awareness",
         ) # end row with sen and pat graphs 
         #                ) # end of row with all 4 reservoir graphs
       ), # end of 1st main column - with graphs
+      
+      # Value boxes that appear on the right ----------------------------------
       column( # this is the 2nd main column - with values & triggers
         width = 6,
         valueBoxOutput("lfalls_obs", width = NULL),
         valueBoxOutput("por_flow", width = NULL),
-        # infoBoxOutput("coop_ops", width = NULL),
-        # infoBoxOutput("lfaa_alert", width = NULL),
-        # infoBoxOutput("mwcog_stage", width = NULL),
-        
-        ##these three boxes were custom built replace the three infoboxes 
-        # that are commented out above
+
         box(
           title=NULL,
           width=NULL,

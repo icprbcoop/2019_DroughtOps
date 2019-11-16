@@ -31,13 +31,18 @@
 #------------------------------------------------------------------------------
 
 # Select flows of interest ----------------------------------------------------
-sit_aware_mgd.df <- flows.daily.mgd.df %>%
+#   - plot will be cfs
+sit_aware_cfs.df <- flows.daily.mgd.df %>%
   dplyr::select(date_time, lfalls, por, monoc_jug, shen_mill,
                 seneca, d_pot_total) %>%
-  dplyr::mutate(lfalls_flowby = lfalls_flowby,
+  dplyr::mutate(lfalls = lfalls*mgd_to_cfs, por = por*mgd_to_cfs,
+                monoc_jug = monoc_jug*mgd_to_cfs, 
+                shen_mill = shen_mill*mgd_to_cfs, seneca = seneca*mgd_to_cfs,
+                d_pot_total = d_pot_total*mgd_to_cfs,
+                lfalls_flowby = lfalls_flowby*mgd_to_cfs,
                 por_trigger = 2000)
 
-flows.plot.df <- sit_aware_mgd.df %>%
+flows.plot.df <- sit_aware_cfs.df %>%
   gather(key = "site", value = "flow", -date_time)
 
 output$sit_aware_flows_plot <- renderPlot({
@@ -52,7 +57,8 @@ output$sit_aware_flows_plot <- renderPlot({
     scale_size_manual(values = c(1, 2, 1, 1, 1, 1, 1, 1)) +
     scale_linetype_manual(values = c("solid", "solid", "dashed",
                                      "solid", "solid",
-                                     "dotted","solid","solid"))
+                                     "dotted","solid","solid")) +
+    labs(x = "", y = "Flow, cfs")
 })
 
 #------------------------------------------------------------------

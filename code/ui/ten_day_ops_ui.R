@@ -38,11 +38,24 @@ tabPanel("10-Day Ops",
              ), # end of 1st main column - with graphs
              column( # this is the 2nd main column - with values & triggers
                width = 6,
-               valueBoxOutput("lfalls_empirical_9day_fc", width = NULL),
+               # some general information
+               valueBoxOutput("lfalls_today", width = NULL),
                valueBoxOutput("wma_withdr_9day_fc", width = NULL),
-               valueBoxOutput("luke", width = NULL),
-               valueBoxOutput("deficit", width = NULL),
-               valueBoxOutput("luke_target", width = NULL)
+               valueBoxOutput("luke", width = NULL), 
+               br(),
+               box(title = "Jennings Randolph water supply release based on LFalls 9-day forecast from empirical recession equation",
+                   width = NULL,
+                   height=60),
+               valueBoxOutput("lfalls_empirical_9day_fc", width = NULL),
+               valueBoxOutput("empirical_9day_deficit", width = NULL),
+               valueBoxOutput("luke_target1", width = NULL),
+               br(),
+               box(title = "Jennings Randolph water supply release based on LFalls 9-day forecast from LFFS",
+                   width = NULL,
+                   height=60),
+               valueBoxOutput("lfalls_lffs_9day_fc", width = NULL),
+               valueBoxOutput("lffs_9day_deficit", width = NULL),
+               valueBoxOutput("luke_target2", width = NULL)
                # valueBoxOutput("lfalls_obs", width = NULL)
              ) # end of 2nd main column
            ) # end of major column that contains whole body

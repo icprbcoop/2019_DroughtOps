@@ -168,7 +168,7 @@ demands.daily.df <- demands.daily.df %>%
 
 # Read LFFS LFalls hourly data ------------------------------------------------
 lffs.hourly.cfs.df <- data.table::fread(
-  paste(ts_path, "PM7_4820_0001.txt", sep = ""),
+  paste(ts_path, "PM7_4820_0001.flow", sep = ""),
   skip = 25,
   header = FALSE,
   stringsAsFactors = FALSE,

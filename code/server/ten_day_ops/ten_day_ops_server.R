@@ -35,11 +35,11 @@ ops_10day.df <- left_join(flows.daily.mgd.df, lffs.daily.mgd.df,
                           by = "date_time") %>%
   dplyr::select(date_time, lfalls, lfalls_from_upstr, lfalls_lffs_bf_corrected,
                 por, monoc_jug,
+                # lffs_lfalls, lfalls_bf_correction,
                 luke, kitzmiller, barnum,
                 bloomington, barton, d_pot_total)
 
-# Prepare 9-day LFalls forecast, and data for flow plot -----------------------
-#   - 9-day forecast from is from coop empirical eq.
+# Prepare 9-day LFalls forecast from empirical eq. ----------------------------
 #   - still use constant 9-day lag from reservoirs to LFalls for now
 date_time_9dayshence = date_today_ops + 9                                   
 ops_10day.df <- ops_10day.df %>%
@@ -59,15 +59,25 @@ ops_10day.df <- ops_10day.df %>%
                   ~ lfalls_nat_empirical_fc,
                   TRUE ~ -9999),
                 lfalls_adj_empirical_fc = lfalls_nat_empirical_fc + 
-                  res_aug_lagged9,
+                  res_augmentation,
                 lfalls_adj_empirical_fc_lagged = 
                   lag(lfalls_adj_empirical_fc, 9),
                 # compute lfalls obs by subtracting WMA demand
                 lfalls_empirical_fc = lfalls_adj_empirical_fc_lagged - 
-                  d_pot_total
+                  d_pot_total,
+                # add flowby to the graph
+                lfalls_flowby = lfalls_flowby
                 ) %>%
   # Do some decluttering
   dplyr::select(-res_aug_lagged8, -res_aug_lagged9, -res_aug_lagged10)
+
+# Grab the 9-day forecasts
+fc_9day <- ops_10day.df %>%
+  filter(date_time == date_time_9dayshence)
+fc_9day_lffs <- fc_9day$lfalls_lffs_bf_corrected[1]
+
+fc_9day_emp_eq <- fc_9day$lfalls_empirical_fc[1]
+
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -77,8 +87,11 @@ ops_10day.df <- ops_10day.df %>%
 
 # Prepare for plotting LFalls & POR flows - first graph on ui -----------------
 lfalls_10day.plot.df <- ops_10day.df %>%
-  dplyr::select(date_time, lfalls, lfalls_from_upstr, lfalls_lffs_bf_corrected,
-                por, monoc_jug, d_pot_total) %>%
+  dplyr::select(date_time, lfalls,
+                por, monoc_jug, d_pot_total,
+                lfalls_from_upstr, lfalls_lffs_bf_corrected,
+                lfalls_flowby
+                ) %>%
   gather(key = "site", value = "flow", -date_time)
 
 # There must be a better way to plot the fc point -----------------------------
@@ -102,12 +115,13 @@ output$ten_day_plot <- renderPlot({
   # Construct the graph
   ggplot(lfalls_10day.plot.df, aes(x = date_time, y = flow)) + 
     geom_line(aes(colour = site, size = site, linetype = site)) +
-    scale_color_manual(values = c("red", "deepskyblue1", 
+    scale_color_manual(values = c("orange", "deepskyblue1", "red", 
                                   "deepskyblue2", "deepskyblue3",
                                    "blue", "steelblue")) +
-    scale_size_manual(values = c(1, 2, 1, 1, 1, 1)) +
-    scale_linetype_manual(values = c("solid", "solid", "dashed",
+    scale_size_manual(values = c(1, 2, 1, 1, 1, 1, 1)) +
+    scale_linetype_manual(values = c("solid", "solid", "dashed", "dashed",
                           "dotted", "solid", "solid")) +
+    labs(x = "", y = "Flow, MGD") +
     # shape=1 is open circle, stroke is border width
     geom_point(data = lfalls_10day.plot2.df, aes(x = date_time, y = flow),
                size = 5, colour = "deepskyblue3", shape = 1, stroke = 1.0)
@@ -127,7 +141,8 @@ output$nbr_ten_day_plot <- renderPlot({
   filter(date_time >= input$plot_range[1],
          date_time <= input$plot_range[2])
   ggplot(nbr_10day.plot.df, aes(x = date_time, y = flow)) + 
-    geom_line(aes(colour = site))
+    geom_line(aes(colour = site)) +
+    labs(x = "", y = "Flow, MGD")
 })
   
 #------------------------------------------------------------------------------
@@ -136,21 +151,22 @@ output$nbr_ten_day_plot <- renderPlot({
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
-# Grab LFalls 9-day fc value for display --------------------------------------
-lfalls_9day_fc_mgd <- round(lfalls_10day.plot2.df$flow[1], 0)
-lfalls_9day_fc_cfs <- round(lfalls_9day_fc_mgd*mgd_to_cfs, 0)
-output$lfalls_empirical_9day_fc <- renderValueBox({
-  lfalls_9day_fc <- paste(
-    "Forecasted flow at Little Falls in 9 days (from empirical eq.): ",
-                          lfalls_9day_fc_mgd, " MGD (", 
-                          lfalls_9day_fc_cfs, " cfs)",
-                          sep = "")
+# Show LFalls today -----------------------------
+flows_today.df <- ops_10day.df %>%
+  filter(date_time == date_today_ops)
+lfalls_mgd <- round(flows_today.df$lfalls[1], 0)
+output$lfalls_today <- renderValueBox({
+  lfalls_today <- paste(
+    "Current observed flow at Little Falls: ",
+    lfalls_mgd,
+    " MGD", sep = "")
   valueBox(
-    value = tags$p(lfalls_9day_fc, style = "font-size: 50%;"),
+    value = tags$p(lfalls_today, style = "font-size: 50%;"),
     subtitle = NULL,
     color = "light-blue"
   )
 })
+
 
 # Grab total WMA withdrawal 9-day fc for display -----------------------------
 wma_withdr_fc <- ops_10day.df %>%
@@ -187,37 +203,111 @@ output$luke <- renderValueBox({
   )
 })
 
-# Display deficit in nine days time -------------------------------------------
-deficit_mgd <- round(lfalls_flowby - lfalls_9day_fc_mgd, 0)
-deficit_cfs <- round(deficit_mgd*mgd_to_cfs)
-output$deficit <- renderValueBox({
-  deficit_9days <- paste("Flow deficit in 9 days time: ",
-                         deficit_mgd,
+# Display 3 boxes giving N Br water supply release info -----------------------
+#   - based on empirical recession eq. 9-day forecast
+print(round(lfalls_10day.plot2.df$flow[1]))
+# LFalls 9-day empirical eq. fc value
+lfalls_9day_fc1_mgd <- round(lfalls_10day.plot2.df$flow[1], 0)
+lfalls_9day_fc1_cfs <- round(lfalls_9day_fc1_mgd*mgd_to_cfs, 0)
+output$lfalls_empirical_9day_fc <- renderValueBox({
+  lfalls_9day_fc1 <- paste(
+    "Forecasted flow at Little Falls in 9 days (from empirical eq.): ",
+    lfalls_9day_fc1_mgd, " MGD (", 
+    lfalls_9day_fc1_cfs, " cfs)",
+    sep = "")
+  valueBox(
+    value = tags$p(lfalls_9day_fc1, style = "font-size: 50%;"),
+    subtitle = NULL,
+    color = "light-blue"
+  )
+})
+
+# Deficit in nine days time
+  deficit1_mgd <- round(lfalls_flowby - lfalls_9day_fc1_mgd, 0)
+  deficit1_cfs <- round(deficit1_mgd*mgd_to_cfs)  
+output$empirical_9day_deficit <- renderValueBox({
+  deficit1_9days <- paste("Flow deficit in 9 days time: ",
+                         deficit1_mgd,
                       " MGD (", 
-                      deficit_cfs, 
+                      deficit1_cfs, 
                       " cfs) [Negative deficit is a surplus]", sep = "")
   valueBox(
-    value = tags$p(deficit_9days, style = "font-size: 50%;"),
+    value = tags$p(deficit1_9days, style = "font-size: 50%;"),
     subtitle = NULL,
     # LukeV - want orange if deficit_mgd is positive, light-blue if negative
     color = "light-blue"
   )
 })
 
-# Display today's Luke target -------------------------------------------------
-luke_extra <- if_else(deficit_mgd <= 0, 0, deficit_mgd)
-luke_target_mgd <- round(luke_mgd + luke_extra, 0)
-luke_target_cfs <- round(luke_target_mgd*mgd_to_cfs, 0)
-output$luke_target <- renderValueBox({
-  luke_target <- paste("Today's Luke target: ",
-                       luke_target_mgd,
+# Today's Luke target 
+luke_extra1 <- if_else(deficit1_mgd <= 0, 0, deficit1_mgd)
+luke_target1_mgd <- round(luke_mgd + luke_extra1, 0)
+luke_target1_cfs <- round(luke_target1_mgd*mgd_to_cfs, 0)
+output$luke_target1 <- renderValueBox({
+  luke_target1 <- paste("Today's Luke target: ",
+                       luke_target1_mgd,
                          " MGD (", 
-                       luke_target_cfs, 
+                       luke_target1_cfs, 
                          " cfs)", sep = "")
   valueBox(
-    value = tags$p(luke_target, style = "font-size: 50%;"),
+    value = tags$p(luke_target1, style = "font-size: 50%;"),
     subtitle = NULL,
     # LukeV - want orange if luke_extra > 0, light-blue if 0
     color = "light-blue"
   )
 })
+
+# Display 3 boxes giving N Br water supply release info -----------------------
+#   - based on LFFS 9-day forecast
+
+# LFalls 9-day LFFS fc value
+lfalls_9day_fc2_mgd <- round(fc_9day_lffs, 0)
+lfalls_9day_fc2_cfs <- round(lfalls_9day_fc2_mgd*mgd_to_cfs, 0)
+output$lfalls_lffs_9day_fc <- renderValueBox({
+  lfalls_9day_fc2 <- paste(
+    "Forecasted flow at Little Falls in 9 days (from LFFS): ",
+    lfalls_9day_fc2_mgd, " MGD (",
+    lfalls_9day_fc2_cfs, " cfs)",
+    sep = "")
+  valueBox(
+    value = tags$p(lfalls_9day_fc2, style = "font-size: 50%;"),
+    subtitle = NULL,
+    color = "light-blue"
+  )
+})
+
+# Deficit in nine days time
+  deficit2_mgd <- round(lfalls_flowby - lfalls_9day_fc2_mgd, 0)
+  deficit2_cfs <- round(deficit2_mgd*mgd_to_cfs)
+output$lffs_9day_deficit <- renderValueBox({
+  deficit2_9days <- paste("Flow deficit in 9 days time: ",
+                         deficit2_mgd,
+                         " MGD (",
+                         deficit2_cfs,
+                         " cfs) [Negative deficit is a surplus]", sep = "")
+  valueBox(
+    value = tags$p(deficit2_9days, style = "font-size: 50%;"),
+    subtitle = NULL,
+    # LukeV - want orange if deficit_mgd is positive, light-blue if negative
+    color = "light-blue"
+  )
+})
+
+# Today's Luke target
+luke_extra2 <- if_else(deficit2_mgd <= 0, 0, deficit2_mgd)
+luke_target2_mgd <- round(luke_mgd + luke_extra2, 0)
+luke_target2_cfs <- round(luke_target2_mgd*mgd_to_cfs, 0)
+output$luke_target2 <- renderValueBox({
+  luke_target2 <- paste("Today's Luke target: ",
+                       luke_target2_mgd,
+                       " MGD (",
+                       luke_target2_cfs,
+                       " cfs)", sep = "")
+  valueBox(
+    value = tags$p(luke_target2, style = "font-size: 50%;"),
+    subtitle = NULL,
+    # LukeV - want orange if luke_extra > 0, light-blue if 0
+    color = "light-blue"
+  )
+})
+

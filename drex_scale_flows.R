@@ -105,6 +105,28 @@ flows.hourly.scaled <- flows.hourly.actual %>%
     TRUE ~ -999.9)
   )
 
+# Read hourly LFFS flows from current folder and scale ------------------------
+flows.lffs.actual <- data.table::fread(
+  paste(ts_path, "PM7_4820_0001.flow", sep = ""),
+  skip = 25,
+  header = FALSE,
+  stringsAsFactors = FALSE,
+  colClasses = c(rep("numeric", 6)), # force cols to numeric
+  col.names = c("year", "month", "day", "minute", "second", "lffs_lfalls"),
+  data.table = FALSE) %>%
+  filter(year >= current_year) # %>%
+  # dplyr::mutate(date_time = 
+  #                 lubridate::make_datetime(year, month, 
+  #                                          day, minute, second),
+  #               date = lubridate:: round_date(date_time, unit = "days")) %>%
+  # select(date_time, date, lffs_lfalls)
+
+flows.lffs.scaled <- flows.lffs.actual %>%
+  dplyr::mutate(lffs_lfalls = lffs_lfalls*flow_scale_factor) %>%
+  # write 10 dummy rows, to mimic file from the Data Portal
+  add_row(year = rep("dummy-row", 25), .before=1)
+
+
 # Write to drex folder --------------------------------------------------------
 write_csv(flows.daily.scaled, paste(drex_path, 
                                     "flows_daily_cfs.csv", sep=""))
@@ -115,3 +137,7 @@ write_csv(flows.hourly.scaled, paste(drex_path,
 write_csv(withdr.hourly.scaled, paste(drex_path,
                               "coop_pot_withdrawals.csv", sep=""),
                               col_names = FALSE)
+
+write_csv(flows.lffs.scaled, paste(drex_path,
+                                      "PM7_4820_0001.flow", sep=""),
+          col_names = FALSE)
