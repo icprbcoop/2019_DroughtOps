@@ -31,8 +31,10 @@
 # Select flows of interest ----------------------------------------------------
 date_today_ops <- date_today0
 
-ops_10day.df <- flows.daily.mgd.df %>%
-  dplyr::select(date_time, lfalls, lfalls_from_upstr, por, monoc_jug,
+ops_10day.df <- left_join(flows.daily.mgd.df, lffs.daily.mgd.df,
+                          by = "date_time") %>%
+  dplyr::select(date_time, lfalls, lfalls_from_upstr, lfalls_lffs_bf_corrected,
+                por, monoc_jug,
                 luke, kitzmiller, barnum,
                 bloomington, barton, d_pot_total)
 
@@ -75,7 +77,7 @@ ops_10day.df <- ops_10day.df %>%
 
 # Prepare for plotting LFalls & POR flows - first graph on ui -----------------
 lfalls_10day.plot.df <- ops_10day.df %>%
-  dplyr::select(date_time, lfalls, lfalls_from_upstr, 
+  dplyr::select(date_time, lfalls, lfalls_from_upstr, lfalls_lffs_bf_corrected,
                 por, monoc_jug, d_pot_total) %>%
   gather(key = "site", value = "flow", -date_time)
 
@@ -87,14 +89,25 @@ lfalls_10day.plot2.df <- ops_10day.df %>%
 
 # Create LFalls flow plot -----------------------------------------------------
 output$ten_day_plot <- renderPlot({
+  
+  # Want user control of plot range
   lfalls_10day.plot.df <- lfalls_10day.plot.df %>%  
   filter(date_time >= input$plot_range[1],
          date_time <= input$plot_range[2])
+  
+  lfalls_10day.plot2.df <- lfalls_10day.plot2.df %>%  
+    filter(date_time >= input$plot_range[1],
+           date_time <= input$plot_range[2])
+  
+  # Construct the graph
   ggplot(lfalls_10day.plot.df, aes(x = date_time, y = flow)) + 
-    geom_line(aes(colour = site, size = site)) +
-    scale_color_manual(values = c("red", "deepskyblue1", "steelblue",
-                                  "green", "blue", "deepskyblue1")) +
+    geom_line(aes(colour = site, size = site, linetype = site)) +
+    scale_color_manual(values = c("red", "deepskyblue1", 
+                                  "deepskyblue2", "deepskyblue3",
+                                   "blue", "steelblue")) +
     scale_size_manual(values = c(1, 2, 1, 1, 1, 1)) +
+    scale_linetype_manual(values = c("solid", "solid", "dashed",
+                          "dotted", "solid", "solid")) +
     # shape=1 is open circle, stroke is border width
     geom_point(data = lfalls_10day.plot2.df, aes(x = date_time, y = flow),
                size = 5, colour = "deepskyblue3", shape = 1, stroke = 1.0)

@@ -57,9 +57,9 @@ flows.last3days.df <- flows.last3days.df %>%
   arrange(por)
 date_min_por <- flows.last3days.df$date_time[1]
 
-flows.last3days.df <- flows.last3days.df %>%
-  arrange(lfalls)
-date_min_lfalls <- flows.last3days.df$date_time[1]
+# flows.last3days.df <- flows.last3days.df %>%
+#   arrange(lfalls)
+# date_min_lfalls <- flows.last3days.df$date_time[1]
 
 flows.last3days.df <- flows.last3days.df %>%
   arrange(monoc_jug)
@@ -169,14 +169,14 @@ flows.daily.mgd.df <- flows.daily.mgd.df %>%
     date_time <= date_today0 ~ hawlings,
     date_time > date_today0 ~ recess_mins$hawlings
     *exp(-0.04*as.numeric((date_time - date_min_hawlings))),
-    TRUE ~ -9999.9)) %>%
+    TRUE ~ -9999.9)) # %>%
   
-  # recess L Falls itself - just to improve look of graph
-  dplyr::mutate(lfalls = case_when(
-    date_time <= date_today0 ~ lfalls,
-    date_time > date_today0 ~ recess_mins$lfalls
-    *exp(-0.04*as.numeric((date_time - date_min_lfalls))),
-    TRUE ~ -9999.9))
+  # # recess L Falls itself - just to improve look of graph
+  # dplyr::mutate(lfalls = case_when(
+  #   date_time <= date_today0 ~ lfalls,
+  #   date_time > date_today0 ~ recess_mins$lfalls
+  #   *exp(-0.04*as.numeric((date_time - date_min_lfalls))),
+  #   TRUE ~ -9999.9))
   
 # Predict LFalls from upstream gages using constant lags ----------------------
 flows.daily.mgd.df <- flows.daily.mgd.df %>%

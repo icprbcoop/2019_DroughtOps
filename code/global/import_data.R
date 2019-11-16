@@ -160,6 +160,12 @@ demands.daily.df <- demands.daily.df %>%
   dplyr::arrange(date_time) %>%
   dplyr::mutate(date_time = round_date(date_time, unit = "days"))
 
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Read the datafile with hourly LFFS forecasts
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
 # Read LFFS LFalls hourly data ------------------------------------------------
 lffs.hourly.cfs.df <- data.table::fread(
   paste(ts_path, "PM7_4820_0001.txt", sep = ""),
@@ -183,6 +189,7 @@ lffs.daily.cfs.df <- lffs.hourly.cfs.df %>%
   group_by(date) %>%
   summarise(lffs_lfalls = mean(lffs_lfalls)) %>%
   mutate(date_time = as.Date(date)) %>%
+  select(date_time, lffs_lfalls) %>%
   ungroup()
 
 #------------------------------------------------------------------------------
