@@ -30,8 +30,8 @@ source("code/global/load_packages.R", local = TRUE)
 
 # Set paths -------------------------------------------------------------------
 
-# ts_path <- "input/ts/current/" # use for actual operations
-ts_path <- "input/ts/2019_drex/"
+ts_path <- "input/ts/current/" # use for actual operations
+# ts_path <- "input/ts/2019_drex/" # use for 2019 drought exercise
 
 # Other paths -----------------------------------------------------------------
 parameters_path <- "input/parameters/"

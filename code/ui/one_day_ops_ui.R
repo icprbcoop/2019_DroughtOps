@@ -12,20 +12,21 @@ tabPanel("1-Day Ops",
                width = 6,
                fluidRow( # row with Potomac flow graph
                  box(
-                   title = "Little Falls predicted from upstream gages 
-                   - constant lags",
+                   title = "Little Falls flows, observed and forecasted 
+                   - daily data",
                    width = NULL,
-                   plotOutput("one_day_ops_plot1", height = "280px")
+                   plotOutput("one_day_ops_plot1", height = "300px")
                  )
                ),
                fluidRow( # row with optional other graphs
-                 h3("Placeholder space for optional other graphs"),
+                 # h3(),
                  column(
                    width = 12,
                    box(
-                     title = "Maybe want another graph",
-                     width = NULL
-                     # plotOutput("one_day_plot", height = "150px")
+                     title = "Little Falls flows, observed and forecasted 
+                     - hourly data",
+                     width = NULL,
+                     plotOutput("one_day_ops_plot2", height = "300px")
                    )
                  )
                ) # end of 2nd fluid row

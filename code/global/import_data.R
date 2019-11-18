@@ -111,8 +111,8 @@ withdr.hourly.df <- withdr.hourly.df %>%
                 w_fw_e = 70, w_fw_c = 20,
                 # total Potomac withdrawals:
                 w_pot_total = w_fw_w + w_wssc + w_lw + w_wa
-                ) %>%
-  dplyr::select(-wa_gf, -wa_lf)
+                ) # %>%
+  # dplyr::select(-wa_gf, -wa_lf)
 
 # Compute daily withdrawals ---------------------------------------------------
 demands.daily.df <- withdr.hourly.df %>%
@@ -129,8 +129,10 @@ demands.daily.df <- withdr.hourly.df %>%
 # # Fill in df with full year of demands so that app won't break --------------
 data_first_date <- head(demands.daily.df$date_time, 1)
 data_last_date <- tail(demands.daily.df$date_time, 1)
-data_last <- tail(demands.daily.df[, 2:8], 1)
-data_first <- head(demands.daily.df[, 2:8], 1)
+# data_last <- tail(demands.daily.df[, 2:8], 1)
+# data_first <- head(demands.daily.df[, 2:8], 1)
+data_last <- tail(demands.daily.df[, 2:10], 1)
+data_first <- head(demands.daily.df[, 2:10], 1)
 current_year <- year(data_last_date)
 year_final_date <- as.Date(paste(as.character(current_year),
                                     "-12-31", sep = ""))
