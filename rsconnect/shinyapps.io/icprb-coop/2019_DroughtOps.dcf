@@ -5,8 +5,8 @@ account: icprb-coop
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1438408
-bundleId: 2571714
+bundleId: 2598985
 url: https://icprb-coop.shinyapps.io/2019_DroughtOps/
-when: 1573143501.94452
+when: 1574117777.22461
 asMultiple: FALSE
 asStatic: FALSE
