@@ -56,7 +56,7 @@ ops_1day_daily.df <- flows.daily.mgd.df %>%
 func_cfs_to_mgd <- function(cfs) {round(cfs/mgd_to_cfs,0)}
 flows.hourly.mgd.df <- flows.hourly.cfs.df %>%
   dplyr::mutate_at(2:32, func_cfs_to_mgd) %>%
-  dplyr::mutate(date = as.Date(round_date(date_time, unit = "days")))
+  dplyr::mutate(date = as.Date(round_date(date_time, unit = "days"))) 
 
 # Add Potomac withdrawals
 demands.df <- demands.daily.df %>%
@@ -65,7 +65,13 @@ demands.df <- demands.daily.df %>%
 ops_1day_hourly.df <- left_join(flows.hourly.mgd.df, 
                                  demands.df, by = "date") %>%
   # Select the gages of interest 
-  select(date_time, date, lfalls, seneca, goose, monoc_jug, por, d_pot_total)
+  select(date_time, lfalls, seneca, goose, monoc_jug, por, d_pot_total)
+
+# # Add LFFS data
+# ops_1day_hourly.df <- left_join(ops_1day_hourly.df0, 
+#                                 lffs.hourly.cfs.df, by = "date_time") %>%
+#   mutate(lfalls_lffs = lfalls_lffs/mgd_to_cfs) %>%
+#   select(-date)
 
 # Fill in missing data --------------------------------------------------------
 #   - delete last row to avoid last hour having missing data 
@@ -109,7 +115,7 @@ output$one_day_ops_plot1 <- renderPlot({
 # LFall predicted from PRRISM algorithm - second graph on ui ------------------
 lfalls_1day.plot2.df <- ops_1day_hourly.df %>%
   mutate(lfalls_flowby = lfalls_flowby) %>%
-  select(-date) %>%
+#  select(-date) %>%
   gather(key = "site", value = "flow", -date_time)
 
 output$one_day_ops_plot2 <- renderPlot({
@@ -118,13 +124,13 @@ output$one_day_ops_plot2 <- renderPlot({
            date_time <= input$plot_range[2]) 
   ggplot(lfalls_1day.plot2.df, aes(x = date_time, y = flow)) + 
     geom_line(aes(colour = site, size = site, linetype = site)) +
-    scale_color_manual(values = c("red", "steelblue","deepskyblue1", 
-                                  "deepskyblue3", "plum",
-                                  "blue", "slateblue1")) +
+    scale_color_manual(values = c("orange", "steelblue","deepskyblue1", 
+                                  "red", "deepskyblue2",
+                                  "blue", "slateblue1", "orange")) +
     scale_linetype_manual(values = c("solid", "solid", "solid",
-                                     "dashed", "solid",
-                                     "solid","solid")) +
-    scale_size_manual(values = c(1, 1, 2, 1, 1, 1, 1)) +
+                                     "dashed", "dotted",
+                                     "solid","solid", "solid")) +
+    scale_size_manual(values = c(1, 1, 2, 1, 1, 1, 1, 1)) +
   labs(x = "", y = "MGD")
 })
 

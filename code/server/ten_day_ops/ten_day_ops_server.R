@@ -35,7 +35,6 @@ ops_10day.df <- left_join(flows.daily.mgd.df, lffs.daily.mgd.df,
                           by = "date_time") %>%
   dplyr::select(date_time, lfalls, lfalls_from_upstr, lfalls_lffs_bf_corrected,
                 por, monoc_jug,
-                # lffs_lfalls, lfalls_bf_correction,
                 luke, kitzmiller, barnum,
                 bloomington, barton, d_pot_total)
 

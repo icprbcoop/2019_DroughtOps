@@ -112,17 +112,12 @@ flows.lffs.actual <- data.table::fread(
   header = FALSE,
   stringsAsFactors = FALSE,
   colClasses = c(rep("numeric", 6)), # force cols to numeric
-  col.names = c("year", "month", "day", "minute", "second", "lffs_lfalls"),
+  col.names = c("year", "month", "day", "minute", "second", "lfalls_lffs"),
   data.table = FALSE) %>%
   filter(year >= current_year) # %>%
-  # dplyr::mutate(date_time = 
-  #                 lubridate::make_datetime(year, month, 
-  #                                          day, minute, second),
-  #               date = lubridate:: round_date(date_time, unit = "days")) %>%
-  # select(date_time, date, lffs_lfalls)
 
 flows.lffs.scaled <- flows.lffs.actual %>%
-  dplyr::mutate(lffs_lfalls = lffs_lfalls*flow_scale_factor) %>%
+  dplyr::mutate(lfalls_lffs = lfalls_lffs*flow_scale_factor) %>%
   # write 10 dummy rows, to mimic file from the Data Portal
   add_row(year = rep("dummy-row", 25), .before=1)
 

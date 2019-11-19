@@ -175,23 +175,24 @@ lffs.hourly.cfs.df <- data.table::fread(
   header = FALSE,
   stringsAsFactors = FALSE,
   colClasses = c(rep("numeric", 6)), # force cols to numeric
-  col.names = c("year", "month", "day", "minute", "second", "lffs_lfalls"),
+  col.names = c("year", "month", "day", "minute", "second", "lfalls_lffs"),
   # na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", "NA", -999999),
   data.table = FALSE) %>%
   filter(year >= current_year) %>%
   dplyr::mutate(date_time = 
                   lubridate::make_datetime(year, month, 
                                            day, minute, second),
-                date = lubridate:: round_date(date_time, unit = "days")) %>%
-  select(date_time, date, lffs_lfalls)
+                date = lubridate:: round_date(date_time, unit = "days"),
+                date = as.Date(date)) %>%
+  select(date_time, date, lfalls_lffs)
 
 # Compute LFFS LFalls daily flows ---------------------------------------------
 lffs.daily.cfs.df <- lffs.hourly.cfs.df %>%
   select(-date_time) %>%
   group_by(date) %>%
-  summarise(lffs_lfalls = mean(lffs_lfalls)) %>%
+  summarise(lfalls_lffs = mean(lfalls_lffs)) %>%
   mutate(date_time = as.Date(date)) %>%
-  select(date_time, lffs_lfalls) %>%
+  select(date_time, lfalls_lffs) %>%
   ungroup()
 
 #------------------------------------------------------------------------------
