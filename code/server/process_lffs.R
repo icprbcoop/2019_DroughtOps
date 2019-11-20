@@ -42,17 +42,18 @@ lffs.daily.mgd.df <- lffs.daily.mgd.df %>%
     TRUE ~ -9999),
     lfalls_lffs_bf_corrected = round(lfalls_lffs + 
                   lfalls_bf_correction, 0),
-    lfalls_obs = lfalls) %>%
-  dplyr::select(date_time, lfalls_obs, lfalls_lffs,
+    lfalls_obs = lfalls,
+    lfalls_lffs_daily = lfalls_lffs) %>%
+  dplyr::select(date_time, lfalls_obs, lfalls_lffs_daily,
                 lfalls_lffs_bf_corrected, lfalls_bf_correction)
   
 # Create df with daily lffs corrections ---------------------------------------
 lffs.daily.corrections.df <- lffs.daily.mgd.df %>%
   mutate(date = as.Date(date_time)) %>%
   select(-date_time) %>%
-  select(date, lfalls_obs, lfalls_lffs,
+  select(date, lfalls_obs, lfalls_lffs_daily,
          lfalls_lffs_bf_corrected, lfalls_bf_correction)
-# 
-# lffs.hourly.mgd.df0 <- left_join(lffs.hourly.cfs.df,
-#                                  lffs.daily.corrections.df, by = "date") %>%
-#   mutate(lfalls_lffs = lfalls_lffs/mgd_to_cfs)
+
+lffs.hourly.mgd.df <- left_join(lffs.hourly.cfs.df,
+                                 lffs.daily.corrections.df, by = "date") %>%
+  mutate(lfalls_lffs = lfalls_lffs/mgd_to_cfs)

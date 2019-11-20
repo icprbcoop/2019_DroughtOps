@@ -82,6 +82,12 @@ flows.hourly.cfs.df <- data.table::fread(
   select(-date) %>%
   select(date_time, everything())
 
+# Add 3 days of rows 
+last_hour <- tail(flows.hourly.cfs.df$date_time, 1)
+last_hour <- last_hour + lubridate::hours(1)
+flows.hourly.cfs.df <- flows.hourly.cfs.df %>%
+  add_row(date_time = seq.POSIXt(last_hour, length.out = 72, by = "hour"))
+
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Import a time series of recent WMA system withdrawals and withdr forecasts

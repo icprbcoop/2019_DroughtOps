@@ -21,10 +21,13 @@ drex_path <- "input/ts/2019_drex/"
 current_path <- "input/ts/current/"
 
 # Key drex inputs -------------------------------------------------------------
-flow_scale_factor <- 0.35
-withdrawals_scale_factor <- 1.5
+flow_scale_factor <- 0.30
+withdrawals_scale_factor <- 1.4
 luke_assumed_cfs <- 120
 luke_min_cfs <- 120
+withdr_assumed_actual_mgd <- 350 # mgd
+withdr_assumed_actual_cfs <- withdr_assumed_actual_mgd*mgd_to_cfs
+withdr_assumed_scaled_cfs <- withdr_assumed_actual_cfs* withdrawals_scale_factor
 
 # Define function for use in mutate_at to scale all flows ---------------------
 scale_flows_func <- function(x, scalefactor) {round(x*scalefactor, 0)}
@@ -38,14 +41,6 @@ withdr.hourly.actual <- data.table::fread(
   colClasses = c("character", rep("numeric", 5)), # force cols 2-6 numeric
   na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", "NA", -999999),
   data.table = FALSE) 
-
-# Compute recent Potomac withdrawal to estimate LFalls adj --------------------
-withdr_yesterday <- withdr.hourly.actual %>%
-  tail(24) %>%
-  mutate(withdr_total = FW + WSSC + WA_GF + WA_LF + LW) %>%
-  summarise_at(2:7, mean)
-withdr_pot_actual_cfs <- mgd_to_cfs*withdr_yesterday$withdr_total
-withdr_pot_scaled_cfs <- mgd_to_cfs*withdr_pot_actual_cfs*withdrawals_scale_factor
 
 withdr.hourly.scaled <- withdr.hourly.actual %>%
   dplyr::mutate_at(2:6, scale_flows_func, withdrawals_scale_factor) %>%
@@ -67,24 +62,18 @@ flows.daily.actual <- data.table::fread(
   data.table = FALSE) %>%
   dplyr::mutate(date = as.Date(date)) # rewrite with 1st column as "date"
 
-# LFalls should be converted to LFalls adj before scaling
-flows.daily.scaled <- flows.daily.actual %>%
-  mutate(lfalls = lfalls + withdr_pot_actual_cfs)
-  
 # Apply scale factor
-flows.daily.scaled <- flows.daily.scaled %>%
-  dplyr::mutate_at(2:32, scale_flows_func, flow_scale_factor)
-
-# But Luke flow is assumed to be kept above min by NBr reservoirs
-flows.daily.scaled <- flows.daily.scaled %>%
+flows.daily.scaled <- flows.daily.actual %>%
+  # convert LFalls obs to LFalls adj before scaling
+  mutate(lfalls = lfalls + withdr_assumed_actual_cfs) %>% 
+  dplyr::mutate_at(2:32, scale_flows_func, flow_scale_factor) %>%
+  # convert LFalls adj back to LFalls
+  dplyr::mutate(lfalls = lfalls - withdr_assumed_scaled_cfs) %>%
+  # and Luke flow is assumed to be kept above min by NBr reservoirs
   dplyr::mutate(luke = case_when(
     luke < luke_min_cfs ~ luke_min_cfs,
     luke >= luke_min_cfs ~ luke,
     TRUE ~ -999.9))
-
-# Convert LFalls adj back to LFalls
-flows.daily.scaled <- flows.daily.scaled %>%
-  mutate(lfalls = lfalls - withdr_pot_scaled_cfs)
 
 # Read hourly flows from current folder and scale -----------------------------
 flows.hourly.actual <- data.table::fread(
@@ -97,17 +86,22 @@ flows.hourly.actual <- data.table::fread(
   data.table = FALSE) %>%
   dplyr::mutate(date = as.POSIXct(date)) # rewrite with 1st column as "date"
 
+# Apply scale factor
 flows.hourly.scaled <- flows.hourly.actual %>%
+  # convert LFalls obs to LFalls adj before scaling
+  mutate(lfalls = lfalls + withdr_assumed_actual_cfs) %>%
   dplyr::mutate_at(2:32, scale_flows_func, flow_scale_factor) %>%
+  # convert LFalls adj back to LFalls
+  dplyr::mutate(lfalls = lfalls - withdr_assumed_scaled_cfs) %>%
+  # and Luke flow is assumed to be kept above min by NBr reservoirs
   dplyr::mutate(luke = case_when(
     luke < luke_min_cfs ~ luke_min_cfs,
     luke >= luke_min_cfs ~ luke,
-    TRUE ~ -999.9)
-  )
+    TRUE ~ -999.9))
 
 # Read hourly LFFS flows from current folder and scale ------------------------
 flows.lffs.actual <- data.table::fread(
-  paste(ts_path, "PM7_4820_0001.flow", sep = ""),
+  paste(current_path, "PM7_4820_0001.flow", sep = ""),
   skip = 25,
   header = FALSE,
   stringsAsFactors = FALSE,
@@ -117,10 +111,14 @@ flows.lffs.actual <- data.table::fread(
   filter(year >= current_year) # %>%
 
 flows.lffs.scaled <- flows.lffs.actual %>%
+  # convert LFalls obs to LFalls adj before scaling
+  dplyr::mutate(lfalls_lffs = lfalls_lffs + withdr_assumed_actual_cfs) %>%
+  # apply scale factor
   dplyr::mutate(lfalls_lffs = lfalls_lffs*flow_scale_factor) %>%
+  # convert LFalls adj back to LFalls
+  dplyr::mutate(lfalls_lffs = lfalls_lffs - withdr_assumed_scaled_cfs) %>%
   # write 10 dummy rows, to mimic file from the Data Portal
   add_row(year = rep("dummy-row", 25), .before=1)
-
 
 # Write to drex folder --------------------------------------------------------
 write_csv(flows.daily.scaled, paste(drex_path, 

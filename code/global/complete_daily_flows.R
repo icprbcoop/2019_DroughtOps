@@ -43,7 +43,6 @@ days_left_in_year <- as.numeric(year_final_date
                                 - data_last_date)
 next_date <- data_last_date
 
-# Add future dates up to end of year to df ------------------------------------
 flows.daily.mgd.df <- flows.daily.mgd.df %>%
   add_row(date_time = seq.Date(date_today0 + 1, year_final_date, by = "day"))
 

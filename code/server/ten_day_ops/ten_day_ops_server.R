@@ -116,7 +116,7 @@ output$ten_day_plot <- renderPlot({
     geom_line(aes(colour = site, size = site, linetype = site)) +
     scale_color_manual(values = c("orange", "deepskyblue1", "red", 
                                   "deepskyblue2", "deepskyblue3",
-                                   "blue", "steelblue")) +
+                                   "plum", "slateblue1")) +
     scale_size_manual(values = c(1, 2, 1, 1, 1, 1, 1)) +
     scale_linetype_manual(values = c("solid", "solid", "dashed", "dashed",
                           "dotted", "solid", "solid")) +

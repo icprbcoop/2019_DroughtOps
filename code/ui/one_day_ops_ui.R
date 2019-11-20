@@ -33,8 +33,19 @@ tabPanel("1-Day Ops",
                ), # end of 1st main column - with graphs
              column( # this is the 2nd main column - with values & triggers
                width = 6, 
+               box(title = "One-day need based on upstream gage changes 
+                   (eq. in PRRISM, constant lags, daily data)",
+                   width = NULL,
+                   height=60),
                valueBoxOutput("lfalls_fc1", width = NULL),
-               valueBoxOutput("lfalls_deficit1", width = NULL)
+               valueBoxOutput("lfalls_deficit1", width = NULL),
+               br(),
+               box(title = "One-day need based on LFFS forecast 
+                   (using baseflow correction)",
+                   width = NULL,
+                   height=60),
+               valueBoxOutput("lfalls_fc2", width = NULL),
+               valueBoxOutput("lfalls_deficit2", width = NULL)
                ) # end of 2nd main column
            ) # end of major column that contains whole body
          ) # end of major row that contains whole body
