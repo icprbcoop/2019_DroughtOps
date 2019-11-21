@@ -21,7 +21,7 @@ drex_path <- "input/ts/2019_drex/"
 current_path <- "input/ts/current/"
 
 # Key drex inputs -------------------------------------------------------------
-flow_scale_factor <- 0.30
+flow_scale_factor <- 0.28
 withdrawals_scale_factor <- 1.4
 luke_assumed_cfs <- 120
 luke_min_cfs <- 120
