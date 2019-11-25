@@ -24,9 +24,9 @@
 
 # Load packages ---------------------------------------------------------------  
 # Use this one when not publishing to shinyapp.io, comment out when publishing:
-# source("code/global/load_packages.R", local = TRUE)
+source("code/global/load_packages.R", local = TRUE)
 # Use this one when publishing, can comment out otherwise:
-source("code/global/import_packages.R", local = TRUE)
+#source("code/global/import_packages.R", local = TRUE)
 
 # Set paths -------------------------------------------------------------------
 
@@ -120,4 +120,5 @@ source("code/server/state_status_ts_init.R", local = TRUE)
 #    - 1 = Watch
 #    - 0 = Warning
 #    - 0 = Emergency
+
 
