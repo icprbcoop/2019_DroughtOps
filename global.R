@@ -40,8 +40,8 @@ map_path <- "data/Drought_Regions" #MD shapefiles
 
 # Set "today's" date ----------------------------------------------------------
 #    - Right now this needs to match last date in flows_daily_cfs.csv
-# date_today0 <- as.Date(today())
-date_today0 <- as.Date("2019-11-21")
+date_today0 <- as.Date(today())
+# date_today0 <- as.Date("2019-11-21")
 
 #-----drought map functions are declared before they are used in import data
 source("code/functions/display/md_drought_map_func.R", local = TRUE)

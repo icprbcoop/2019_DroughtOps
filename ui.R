@@ -15,7 +15,7 @@ dashboardPage(skin = "blue",
                   ),
   #--------------------------------------------------------------------------------
   #--------------------------------------------------------------------------------
-  # The sidebar - has the user inputs and controls
+  # The LHS sidebar - has the user inputs and controls
   #--------------------------------------------------------------------------------
   #--------------------------------------------------------------------------------
   dashboardSidebar(
@@ -24,7 +24,7 @@ dashboardPage(skin = "blue",
                "Specify plot range",
                # start = date_start,
               start = "2019-11-06",
-              end = "2019-12-02",
+              end = "2019-12-31",
                # start = date_start,
                # end = date_end,
                format = "yyyy-mm-dd",
