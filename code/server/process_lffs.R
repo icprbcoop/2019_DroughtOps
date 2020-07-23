@@ -20,6 +20,7 @@
 #   - work in MGD
 
 # Add corrections to lffs daily df --------------------------------------------
+print("starting process_lffs")
 lffs.daily.mgd.df <- left_join(flows.daily.mgd.df, lffs.daily.cfs.df,
                                 by = "date_time") %>%
   dplyr::mutate(lfalls_lffs = round(lfalls_lffs/mgd_to_cfs, 0)) %>%

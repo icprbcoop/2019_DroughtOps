@@ -80,6 +80,9 @@ flows.hourly.cfs.df <- data.table::fread(
   # mutate(date_time = date)
   dplyr::mutate(date_time = as.POSIXct(date)) %>%
   select(-date) %>%
+  arrange(date_time) %>%
+  filter(!is.na(date_time)) %>% # sometime these are sneaking in
+  head(-1) %>% # the last record is sometimes missing most data
   select(date_time, everything())
 
 # Add 3 days of rows 
@@ -124,7 +127,8 @@ withdr.hourly.df <- withdr.hourly.df %>%
 demands.daily.df <- withdr.hourly.df %>%
   select(-date_time) %>%
   group_by(date) %>%
-  summarise_all(mean) %>%
+  # summarise_all(mean) %>%
+  summarise(across(everything(), mean), .groups = "keep") %>%
   # temporarily go back to d (demand) instead of w (withdrawal)
   rename(date_time = date, d_wa = w_wa, d_fw_w = w_fw_w, d_lw = w_lw,
          d_wssc = w_wssc, d_pot_total = w_pot_total, 
@@ -133,12 +137,11 @@ demands.daily.df <- withdr.hourly.df %>%
   ungroup()
 
 # # Fill in df with full year of demands so that app won't break --------------
+ncols <- length(demands.daily.df[1,])
 data_first_date <- head(demands.daily.df$date_time, 1)
 data_last_date <- tail(demands.daily.df$date_time, 1)
-# data_last <- tail(demands.daily.df[, 2:8], 1)
-# data_first <- head(demands.daily.df[, 2:8], 1)
-data_last <- tail(demands.daily.df[, 2:10], 1)
-data_first <- head(demands.daily.df[, 2:10], 1)
+data_last <- tail(demands.daily.df[, 2:ncols], 1)
+data_first <- head(demands.daily.df[, 2:ncols], 1)
 current_year <- year(data_last_date)
 year_final_date <- as.Date(paste(as.character(current_year),
                                     "-12-31", sep = ""))
@@ -252,24 +255,32 @@ pat.ts.df00 <- data.table::fread(paste(ts_path, "drex2018_output_pat.csv", sep =
 
 #----------------------------------------shapefile load----------------------------------
 # read map shapefiles in ---------------------
-clipcentral = readOGR(dsn=map_path, layer = "clipcentral")
-western_dslv = readOGR(dsn=map_path, layer = "western_dslv")
+# Luke - CS July 2020: the lines below cause errors,
+# but the variables are never used so I'm commenting out
+# clipcentral = readOGR(dsn=map_path, layer = "clipcentral")
+# western_dslv = readOGR(dsn=map_path, layer = "western_dslv")
 
 #transform map shapefiles  ---------------------
-clipcentral_t <- spTransform(clipcentral, CRS("+init=epsg:4326"))
-western_region_t <- spTransform(western_dslv, CRS("+init=epsg:4326"))
+# Luke - CS July 2020: the lines below cause errors,
+# but the variables are never used so I'm commenting out
+# clipcentral_t <- spTransform(clipcentral, CRS("+init=epsg:4326"))
+# western_region_t <- spTransform(western_dslv, CRS("+init=epsg:4326"))
 #----------------------------------------------------------------------------------------
 
 
 #----------------------drought maps updating---------------------------------------------
-#calls function to get the latest version of the maryland drought map
-md_drought_map = md_drought_map_func(date_today0)
+# Luke - these functions seem to be broken - are hanging up
+
+# calls function to get the latest version of the maryland drought map
+# md_drought_map = md_drought_map_func(date_today0)
+md_drought_map <- readPNG("input/MD_droughtmap_temp.png")
 
 #calls function to get the latest version of the virginia drought map
 #---toggle
 ##for day to day
-va_drought_map = va_drought_map_func()
 
+# va_drought_map = va_drought_map_func()
+va_drought_map = readPNG("input/VA_droughtmap_temp.png")
 ##to publish
 # project.dir <- rprojroot::find_rstudio_root_file()
 # va_drought_map = file.path(project.dir,'/global/images/va_drought_placeholder.png')

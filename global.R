@@ -37,10 +37,11 @@ ts_path <- "input/ts/current/" # use for actual operations
 parameters_path <- "input/parameters/"
 ts_output <- "output/" # path of output directory
 map_path <- "data/Drought_Regions" #MD shapefiles
-
 # Set "today's" date ----------------------------------------------------------
 #    - Right now this needs to match last date in flows_daily_cfs.csv
 date_today0 <- as.Date(today())
+
+# For 2019 DREX
 # date_today0 <- as.Date("2019-11-21")
 
 #-----drought map functions are declared before they are used in import data

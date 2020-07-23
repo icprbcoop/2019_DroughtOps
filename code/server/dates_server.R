@@ -1,3 +1,4 @@
+print("starting dates_server")
 todays.date <- reactive({
   req(as.Date(input$today.override) >= lubridate::ymd("1800-01-01"))
   todays.date <- as.Date(input$today.override) %>% 

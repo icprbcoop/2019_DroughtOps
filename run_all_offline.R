@@ -2,8 +2,8 @@
 # run_all_offline runs the model outside of Shiny, for QAing purposes
 #******************************************************************
 # First run global.R, which loads all data, paths, functions
-source("global.R", local = TRUE) 
-#
+source("global.R", local = TRUE)
+
 # date_today0 is set in /input/parameters/parameters.R, 
 #    but might want to change it, by using date_today
 # date_today <- as.Date("1930-02-01")

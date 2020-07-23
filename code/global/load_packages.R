@@ -20,6 +20,7 @@ need <- c("shiny",
           "sp",
           "leaflet",
           "rgdal",
+          "png",
           "RCurl",
           "tidyverse") 
 # find out which packages are installed
