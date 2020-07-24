@@ -54,49 +54,43 @@ tabPanel("Situational Awareness",
       
       # Value boxes that appear on the right ----------------------------------
       column( # c3: this is the 2nd main column - with values & triggers
-        width = 6 #,
-        # valueBoxOutput("lfalls_obs", width = NULL),
-        # valueBoxOutput("por_flow", width = NULL),
-        # 
-        # box(
-        #   title=NULL,
-        #   width=NULL,
-        #   height=50,
-        #   htmlOutput(outputId = "coop_ops")
-        # ),
-        # box(
-        #   title=NULL,
-        #   width=NULL,
-        #   height=50,
-        #   htmlOutput(outputId = "lfaa_alert")
-        # ),
-        # box(
-        #   title=NULL,
-        #   width=NULL,
-        #   height=50,
-        #   htmlOutput(outputId = "mwcog_stage")
-        # ),
-        # 
-        # #these two boxes are for outputting the Maryland drought map 
-        # #and Virginia drought squares
-        # 
+        width = 6,
+        valueBoxOutput("lfalls_obs", width = NULL),
+        valueBoxOutput("por_flow", width = NULL),
+        box(
+          title=NULL,
+          width=NULL,
+          height=50,
+          htmlOutput(outputId = "coop_ops")
+        ),
+        box(
+          title=NULL,
+          width=NULL,
+          height=50,
+          htmlOutput(outputId = "lfaa_alert")
+        ),
+        box(
+          title=NULL,
+          width=NULL,
+          height=50,
+          htmlOutput(outputId = "mwcog_stage")
+        ) #,
+
+        #these two boxes are for outputting the Maryland drought map
+        #and Virginia drought squares
+
         # #----------------------beginning of Maryland section-----------------------------------
         # box(
         #   title = NULL,#"MARYLAND DROUGHT STATUS",
         #   width = NULL,#6,
         #   height = 220,
         #   htmlOutput(outputId="MD_title"),
-        #   
-        #   box(
-        #     tags$img(alt="Drought Status Map:2019-05-31",
-        #              src= md_drought_map,
-        #              style="width:250px;height:150px;border:0;")
+        #   box(tags$img(alt="Drought Status Map:2019-05-31",
+        #                src= md_drought_map,
+        #                style="width:250px;height:150px;border:0;")
         #     #leafletOutput("mymap", height =140, width =300)
-        #   )
-        #   # box(
-        #   #   htmlOutput(outputId = "boxes")
-        #   # )
-        # ),
+        #     )
+        #   ),
         # #tags$p("Western region: Drought Watch; Central region: Drought Warning")),
         # #-------------------------end of Maryland section---------------------------------------
         # 
@@ -122,6 +116,6 @@ tabPanel("Situational Awareness",
     ) # end of c1 - major column that contains whole body
   ), # end of major row that contains whole body
   fluidRow( # Temporary row to display some output for QAing
-    # valueBoxOutput("QA_out", width = NULL) 
+    valueBoxOutput("QA_out", width = NULL)
   ) # end fluidRow for QAing purposes
 ) # end of tab panel

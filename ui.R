@@ -110,15 +110,14 @@ dashboardPage(skin = "blue" ,
       #alter styles(color,font size, alignments) across allui/server elements
       tags$link(rel = "stylesheet", type = "text/css", href = "CSS/main.css")),
     navbarPage(title=NULL,
-      source("code/ui/situational_awareness_ui.R", local = TRUE)$value #,
-      # # source("code/ui/one_day_ops_ui.R", local = TRUE)$value,
-      # source("code/ui/ten_day_ops_ui.R", local = TRUE)$value,
+      source("code/ui/situational_awareness_ui.R", local = TRUE)$value,
+      source("code/ui/one_day_ops_ui.R", local = TRUE)$value,
+      source("code/ui/ten_day_ops_ui.R", local = TRUE)$value,
       # source("code/ui/long_term_operations.R", local = TRUE)$value,
-      # source("code/ui/demands_ui.R", local = TRUE)$value,
-      # source("code/ui/simulation_ui.R", local = TRUE)$value,
-      # source("code/ui/download_data_ui.R", local = TRUE)$value
-    )
-      
+      source("code/ui/demands_ui.R", local = TRUE)$value,
+      source("code/ui/simulation_ui.R", local = TRUE)$value,
+      source("code/ui/download_data_ui.R", local = TRUE)$value
+      )
     ) # end dashboardBody
 ) # end dashboardPage
 
