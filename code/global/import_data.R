@@ -42,7 +42,7 @@
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
-# Import streamflow time series:
+# Import daily streamflow time series:
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 
@@ -52,10 +52,17 @@ gages <- data.table::fread(paste(parameters_path, "gages.csv", sep = ""),
                            header = TRUE,
                            data.table = FALSE)
 list_gage_locations <- c("date", gages$location)
+llen <- length(list_gage_locations)
+gage_locations <- list_gage_locations[2:llen]
+gage_locations <- as.list(gage_locations)
+
+# Will make use of first and last day of current year
+date_dec31 <- lubridate::ceiling_date(date_today0, unit = "year") - 1
+date_jan1 <- lubridate::floor_date(date_today0, unit = "year")
 
 # Read daily flow data --------------------------------------------------------
 #   - for daily data use as.Date - getting rid of time
-flows.daily.cfs.df <- data.table::fread(
+flows.daily.cfs.df0 <- data.table::fread(
   paste(ts_path, "flows_daily_cfs.csv", sep = ""),
   header = TRUE,
   stringsAsFactors = FALSE,
@@ -65,9 +72,25 @@ flows.daily.cfs.df <- data.table::fread(
   data.table = FALSE) %>%
   dplyr::mutate(date_time = as.Date(date)) %>%
   select(-date) %>%
-  select(date_time, everything())
+  filter(!is.na(date_time)) %>%
+  select(date_time, everything()) %>%
+  arrange(date_time)
 
-# Read hourly flow data --------------------------------------------------------
+# Identify the last date with daily flow data
+flowday_last <- tail(flows.daily.cfs.df0, 1)$date_time
+
+# Add rest of the year's dates to this df; added flow values = NA
+#  - this seems to make the app more robust if missing data
+flows.daily.cfs.df <- flows.daily.cfs.df0 %>%
+  add_row(date_time = seq.Date(flowday_last + 1, date_dec31, by = "day"))
+
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Import hourly streamflow time series:
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
+# Read hourly flow data -------------------------------------------------------
 #   - for hourly data use as.POSIXct
 flows.hourly.cfs.df <- data.table::fread(
   paste(ts_path, "flows_hourly_cfs.csv", sep = ""),
@@ -85,7 +108,7 @@ flows.hourly.cfs.df <- data.table::fread(
   head(-1) %>% # the last record is sometimes missing most data
   select(date_time, everything())
 
-# Add 3 days of rows 
+# Add 3 days of rows; added flow values = NA
 last_hour <- tail(flows.hourly.cfs.df$date_time, 1)
 last_hour <- last_hour + lubridate::hours(1)
 flows.hourly.cfs.df <- flows.hourly.cfs.df %>%
@@ -98,9 +121,9 @@ flows.hourly.cfs.df <- flows.hourly.cfs.df %>%
 #------------------------------------------------------------------------------
 
 # Read hourly withdrawal data -------------------------------------------------
-withdr.hourly.df <- data.table::fread(
+withdr.hourly.df0 <- data.table::fread(
   paste(ts_path, "coop_pot_withdrawals.csv", sep = ""),
-  skip = 10,
+  skip = 12,
   header = TRUE,
   stringsAsFactors = FALSE,
   # colClasses = c("character", rep("numeric", 6)), # force cols 2-6 numeric
@@ -108,20 +131,21 @@ withdr.hourly.df <- data.table::fread(
   data.table = FALSE)
 
 # Get df in necessary format --------------------------------------------------
-withdr.hourly.df <- withdr.hourly.df %>%
-  dplyr::rename_all(tolower) %>% # switch to lowercase col names
-  dplyr::rename(date_time = datetime, 
+withdr.hourly.df <- withdr.hourly.df0 %>%
+  dplyr::rename_with(tolower) %>% # switch to lowercase col names
+  dplyr::rename(date_time = datetime,
                 w_wssc = wssc,
                 w_fw_w = fw,
                 w_lw = lw) %>%
+  filter(!is.na(date_time)) %>% # sometime these are sneaking in
   dplyr::mutate(date_time = as.POSIXct(date_time, tz = "EST"),
                 date = round_date(date_time, unit = "days"),
                 w_wa = wa_gf + wa_lf,
                 w_fw_e = 70, w_fw_c = 20,
                 # total Potomac withdrawals:
                 w_pot_total = w_fw_w + w_wssc + w_lw + w_wa
-                ) # %>%
-  # dplyr::select(-wa_gf, -wa_lf)
+                )  %>%
+  dplyr::select(-wa_gf, -wa_lf)
 
 # Compute daily withdrawals ---------------------------------------------------
 demands.daily.df <- withdr.hourly.df %>%
@@ -143,9 +167,7 @@ data_last_date <- tail(demands.daily.df$date_time, 1)
 data_last <- tail(demands.daily.df[, 2:ncols], 1)
 data_first <- head(demands.daily.df[, 2:ncols], 1)
 current_year <- year(data_last_date)
-year_final_date <- as.Date(paste(as.character(current_year),
-                                    "-12-31", sep = ""))
-days_left_in_year <- as.numeric(year_final_date - data_last_date)
+days_left_in_year <- as.numeric(date_dec31 - data_last_date)
 next_date <- data_last_date
 
 for(i in 1:days_left_in_year) {
@@ -155,11 +177,9 @@ for(i in 1:days_left_in_year) {
 }
 
 # Fill in df with constant past demands so that app won't break ---------------
-year_first_date <- paste(as.character(current_year), "-01-01", sep = "")
-year_first_date <- as.Date(year_first_date)
 data_first_date <- as.Date(data_first_date)
 days_prior_in_year <- as.numeric(difftime(data_first_date,
-                                    year_first_date, 
+                                          date_jan1, 
                                     units = "days"))
 prior_date <- data_first_date
 for(i in 1:days_prior_in_year) {
@@ -178,15 +198,18 @@ demands.daily.df <- demands.daily.df %>%
 #------------------------------------------------------------------------------
 
 # Read LFFS LFalls hourly data ------------------------------------------------
-lffs.hourly.cfs.df <- data.table::fread(
-  paste(ts_path, "PM7_4820_0001.flow", sep = ""),
+lffs.hourly.cfs.all.df <- data.table::fread(
+  # paste(ts_path, "PM7_4820_0001.flow", sep = ""),
+  "http://icprbcoop.org/upload01/PM7_4820_0001.flow",
   skip = 25,
   header = FALSE,
   stringsAsFactors = FALSE,
   colClasses = c(rep("numeric", 6)), # force cols to numeric
   col.names = c("year", "month", "day", "minute", "second", "lfalls_lffs"),
   # na.strings = c("eqp", "Ice", "Bkw", "", "#N/A", "NA", -999999),
-  data.table = FALSE) %>%
+  data.table = FALSE) 
+
+lffs.hourly.cfs.df <- lffs.hourly.cfs.all.df %>%
   filter(year >= current_year) %>%
   dplyr::mutate(date_time = 
                   lubridate::make_datetime(year, month, 
@@ -290,7 +313,8 @@ va_drought_map = readPNG("input/VA_droughtmap_temp.png")
 
 # #------------------------------
 # #load in test data for ten day
-# ten_day.df <- data.table::fread(file.path(ts_path, "ten_day_test/ten_day_test.csv", sep=""),data.table = FALSE)
+# ten_day.df <- data.table::fread(file.path(ts_path, "ten_day_test/ten_day_test.csv", sep=""),
+# data.table = FALSE)
 # 
 # #------------------------------
 # #load in data for demands from Sarah's Drupal site (if site is up, otherwise do nothing)

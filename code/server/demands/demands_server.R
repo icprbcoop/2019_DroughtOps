@@ -30,7 +30,8 @@
 # Select values to plot
 demands.plot.df <- demands.daily.df %>%
   mutate(d_fw_pot = d_fw_w, d_wssc_pot = d_wssc, d_lw_pot = d_lw) %>%
-  select(date_time, d_fw_pot, d_wssc_pot, wa_gf, wa_lf, d_lw_pot)
+  # select(date_time, d_fw_pot, d_wssc_pot, wa_gf, wa_lf, d_lw_pot)
+  select(date_time, d_fw_pot, d_wssc_pot, d_wa, d_lw_pot)
 
 # Grab yesterday's values to display
 demands_yesterday.df <- demands.plot.df %>%

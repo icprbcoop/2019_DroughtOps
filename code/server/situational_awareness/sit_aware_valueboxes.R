@@ -12,9 +12,13 @@
   por_threshold <- 2000 # (cfs) CO-OP's trigger for daily monitoring/reporting
   potomac.ts.df <- ts$flows
   por_mgd <- flows_yesterday.df$por[1]
-  por_flow <- paste("Flow at Point of Rocks yesterday = ",
+  
+  # Error trapping: if POR daily flow yesterday is NA
+  if(flows_yesterday.df$date_time <= flowday_last)
+     por_flow <- paste("Flow at Point of Rocks yesterday = ",
                     round(por_mgd*mgd_to_cfs), " cfs",
-                    " (", round(por_mgd), " MGD)", sep = "")
+                    " (", round(por_mgd), " MGD)", sep = "") else
+                      por_flow <- "Yesterday's Point of Rocks daily flow value is not available"
   valueBox(
     value = tags$p(por_flow, style = "font-size: 60%;"),
     subtitle = NULL,
@@ -32,6 +36,13 @@ output$lfalls_obs <- renderValueBox({
                       round(lfalls_mgd*mgd_to_cfs),
                       " cfs (", round(lfalls_mgd),
                       " MGD)", sep = "")
+  # Error trapping: if LFalls daily flow yesterday is NA
+  if(flows_yesterday.df$date_time <= flowday_last)
+    lfalls_obs <- paste("Flow at Little Falls yesterday = ",
+                      round(lfalls_mgd*mgd_to_cfs), " cfs",
+                      " (", round(lfalls_mgd), " MGD)", sep = "") else
+                        lfalls_obs <- "Yesterday's Little Falls daily flow value is not available"
+  
   valueBox(
     value = tags$p(lfalls_obs, style = "font-size: 60%;"),
     subtitle = NULL,
@@ -47,19 +58,27 @@ output$coop_ops <- renderUI({
   por_flow <- flows.last$por_nat[1]*mgd_to_cfs
   q_adj <- flows.last$lfalls_adj[1]
   withdr_pot <- flows.last$demand[1]
+
   #
-  if(por_flow > 2000) {
-    text_stage <- "NORMAL"
+  if(is.na(por_flow)) {
+    text_stage <- "MISSING DATA"
     text_stage2 <- ""
-    color_stage <- green}
-  if(por_flow <= 2000) {
-    text_stage <- "DAILY OPS" 
-    text_stage2 <- "Daily monitoring & reporting"
-    color_stage <- yellow}
-  if(q_adj <= 100 + 2*withdr_pot) {
-    text_stage <- "HOURLY OPS" 
-    text_stage2 <- "Hourly monitoring & reporting"
-    color_stage <- orange}
+    color_stage <- gray}
+  else {
+    if(por_flow > 2000) {
+      text_stage <- "NORMAL"
+      text_stage2 <- ""
+      color_stage <- green}
+    if(por_flow <= 2000) {
+      text_stage <- "DAILY OPS" 
+      text_stage2 <- "Daily monitoring & reporting"
+      color_stage <- yellow}
+    if(q_adj <= 100 + 2*withdr_pot) {
+      text_stage <- "HOURLY OPS" 
+      text_stage2 <- "Hourly monitoring & reporting"
+      color_stage <- orange}
+  }
+
   div(class="longbox",
       div(class="ibox", style = "background-color:silver",
           div(class="my_content",

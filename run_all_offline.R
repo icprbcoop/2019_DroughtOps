@@ -2,7 +2,42 @@
 # run_all_offline runs the model outside of Shiny, for QAing purposes
 #******************************************************************
 # First run global.R, which loads all data, paths, functions
-source("global.R", local = TRUE)
+# source("global.R", local = TRUE)
+
+#******************************************************************
+# Load packages ---------------------------------------------------------------  
+# Use this one when not publishing to shinyapp.io, comment out when publishing:
+source("code/global/load_packages.R", local = TRUE)
+# Use this one when publishing, can comment out otherwise:
+#source("code/global/import_packages.R", local = TRUE)
+
+# Set paths -------------------------------------------------------------------
+
+ts_path <- "input/ts/current/" # use for actual operations
+# ts_path <- "input/ts/2019_drex/" # use for 2019 drought exercise
+
+# Other paths -----------------------------------------------------------------
+parameters_path <- "input/parameters/"
+ts_output <- "output/" # path of output directory
+map_path <- "data/Drought_Regions" #MD shapefiles
+# Set "today's" date ----------------------------------------------------------
+#    - Right now this needs to match last date in flows_daily_cfs.csv
+date_today0 <- as.Date(today())
+
+# For 2019 DREX
+# date_today0 <- as.Date("2019-11-21")
+
+#-----drought map functions are declared before they are used in import data
+source("code/functions/display/md_drought_map_func.R", local = TRUE)
+source("code/functions/display/va_drought_map_func.R", local = TRUE)
+#------------------------------------------------------------------------------
+
+#-----define parameters and import data ----------------------
+# source("config/paths.R", local = TRUE)
+source("input/parameters/parameters_ops.R", local = TRUE)
+source("input/parameters/parameters_physical.R", local = TRUE)
+
+#******************************************************************
 
 # date_today0 is set in /input/parameters/parameters.R, 
 #    but might want to change it, by using date_today

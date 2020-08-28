@@ -115,11 +115,11 @@ output$ten_day_plot <- renderPlot({
   ggplot(lfalls_10day.plot.df, aes(x = date_time, y = flow)) + 
     geom_line(aes(colour = site, size = site, linetype = site)) +
     scale_color_manual(values = c("orange", "deepskyblue1", "red", 
-                                  "deepskyblue2", "deepskyblue3",
-                                   "plum", "slateblue1")) +
+                                  "deepskyblue2", "purple",
+                                   "plum", "navy")) +
     scale_size_manual(values = c(1, 2, 1, 1, 1, 1, 1)) +
     scale_linetype_manual(values = c("solid", "solid", "dashed", "dashed",
-                          "dotted", "solid", "solid")) +
+                          "solid", "solid", "dotdash")) +
     labs(x = "", y = "Flow, MGD") +
     # shape=1 is open circle, stroke is border width
     geom_point(data = lfalls_10day.plot2.df, aes(x = date_time, y = flow),
@@ -160,7 +160,7 @@ output$lfalls_today <- renderValueBox({
     lfalls_mgd,
     " MGD", sep = "")
   valueBox(
-    value = tags$p(lfalls_today, style = "font-size: 50%;"),
+    value = tags$p(lfalls_today, style = "font-size: 35%;"),
     subtitle = NULL,
     color = "light-blue"
   )
@@ -177,7 +177,7 @@ output$wma_withdr_9day_fc <- renderValueBox({
                           wma_withdr_fc,
                           " MGD", sep = "")
   valueBox(
-    value = tags$p(wma_withdr, style = "font-size: 50%;"),
+    value = tags$p(wma_withdr, style = "font-size: 35%;"),
     subtitle = NULL,
     color = "light-blue"
   )
@@ -196,7 +196,7 @@ output$luke <- renderValueBox({
                       luke_cfs, 
                       " cfs)", sep = "")
   valueBox(
-    value = tags$p(luke_today, style = "font-size: 50%;"),
+    value = tags$p(luke_today, style = "font-size: 35%;"),
     subtitle = NULL,
     color = "light-blue"
   )
@@ -215,7 +215,7 @@ output$lfalls_empirical_9day_fc <- renderValueBox({
     lfalls_9day_fc1_cfs, " cfs)",
     sep = "")
   valueBox(
-    value = tags$p(lfalls_9day_fc1, style = "font-size: 50%;"),
+    value = tags$p(lfalls_9day_fc1, style = "font-size: 35%;"),
     subtitle = NULL,
     color = "light-blue"
   )
@@ -231,7 +231,7 @@ output$empirical_9day_deficit <- renderValueBox({
                       deficit1_cfs, 
                       " cfs) [Negative deficit is a surplus]", sep = "")
   valueBox(
-    value = tags$p(deficit1_9days, style = "font-size: 50%;"),
+    value = tags$p(deficit1_9days, style = "font-size: 35%;"),
     subtitle = NULL,
     # LukeV - want orange if deficit_mgd is positive, light-blue if negative
     color = "light-blue"
@@ -249,7 +249,7 @@ output$luke_target1 <- renderValueBox({
                        luke_target1_cfs, 
                          " cfs)", sep = "")
   valueBox(
-    value = tags$p(luke_target1, style = "font-size: 50%;"),
+    value = tags$p(luke_target1, style = "font-size: 35%;"),
     subtitle = NULL,
     # LukeV - want orange if luke_extra > 0, light-blue if 0
     color = "light-blue"
@@ -269,7 +269,7 @@ output$lfalls_lffs_9day_fc <- renderValueBox({
     lfalls_9day_fc2_cfs, " cfs)",
     sep = "")
   valueBox(
-    value = tags$p(lfalls_9day_fc2, style = "font-size: 50%;"),
+    value = tags$p(lfalls_9day_fc2, style = "font-size: 35%;"),
     subtitle = NULL,
     color = "light-blue"
   )
@@ -285,7 +285,7 @@ output$lffs_9day_deficit <- renderValueBox({
                          deficit2_cfs,
                          " cfs) [Negative deficit is a surplus]", sep = "")
   valueBox(
-    value = tags$p(deficit2_9days, style = "font-size: 50%;"),
+    value = tags$p(deficit2_9days, style = "font-size: 35%;"),
     subtitle = NULL,
     # LukeV - want orange if deficit_mgd is positive, light-blue if negative
     color = "light-blue"
@@ -303,7 +303,7 @@ output$luke_target2 <- renderValueBox({
                        luke_target2_cfs,
                        " cfs)", sep = "")
   valueBox(
-    value = tags$p(luke_target2, style = "font-size: 50%;"),
+    value = tags$p(luke_target2, style = "font-size: 35%;"),
     subtitle = NULL,
     # LukeV - want orange if luke_extra > 0, light-blue if 0
     color = "light-blue"
